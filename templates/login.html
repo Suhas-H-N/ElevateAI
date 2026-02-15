@@ -2,15 +2,22 @@
 <html>
 <head>
     <title>Elevate AI - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
+<div class="container">
     <h2>Elevate AI Login</h2>
 
-    <form>
-        <input type="text" placeholder="Username"><br><br>
-        <input type="password" placeholder="Password"><br><br>
+    <form method="POST">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>
     </form>
+
+    <br>
+    <a href="/signup">Create new account</a>
+</div>
 
 </body>
 </html>

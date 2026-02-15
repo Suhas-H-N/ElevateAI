@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Elevate AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>Welcome, {{ username }} 👋</h2>
+
+    <br>
+
+    <button onclick="startInterview()">Start Interview</button>
+
+    <br><br>
+
+    <a href="/logout">Logout</a>
+</div>
+
+<script>
+function startInterview() {
+    alert("Interview module coming next!");
+}
+</script>
+
+</body>
+</html>
