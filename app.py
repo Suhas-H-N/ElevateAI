@@ -50,8 +50,6 @@ def signup():
 
     return render_template("signup.html")
 
-
-
 @app.route("/dashboard")
 def dashboard():
     if "user" in session:
@@ -63,6 +61,13 @@ def dashboard():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
+    return redirect(url_for("login"))
+
+@app.route("/interview")
+def interview():
+    if "user" in session:
+        question = "Tell me about yourself."
+        return render_template("interview.html", question=question)
     return redirect(url_for("login"))
 
 
