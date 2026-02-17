@@ -63,12 +63,31 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
-@app.route("/interview")
+questions = [
+    "Tell me about yourself.",
+    "What are your strengths?",
+    "Why should we hire you?",
+    "Where do you see yourself in 5 years?"
+]
+
+
+@app.route("/interview", methods=["GET", "POST"])
 def interview():
-    if "user" in session:
-        question = "Tell me about yourself."
-        return render_template("interview.html", question=question)
-    return redirect(url_for("login"))
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    if "q_index" not in session:
+        session["q_index"] = 0
+
+    if request.method == "POST":
+        session["q_index"] += 1
+
+    if session["q_index"] >= len(questions):
+        session.pop("q_index", None)
+        return render_template("result.html")
+
+    question = questions[session["q_index"]]
+    return render_template("interview.html", question=question)
 
 
 if __name__ == "__main__":

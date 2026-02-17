@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Interview - Elevate AI</title>
+    <title>Result - Elevate AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 <div class="container">
-    <h2>Interview Question</h2>
-
-    <p>{{ question }}</p>
-
-    <form method="POST">
-        <textarea name="answer" rows="4" placeholder="Type your answer here..." required></textarea>
-        <br><br>
-        <button type="submit">Next</button>
-    </form>
+    <h2>Interview Completed 🎉</h2>
+    <p>Great job! More scoring features coming soon.</p>
 
     <br>
-    <a href="/dashboard">Back to Dashboard</a>
+    <a href="/dashboard"><button>Back to Dashboard</button></a>
 </div>
 <script>
 function toggleTheme() {

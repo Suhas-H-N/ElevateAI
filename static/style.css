@@ -76,3 +76,24 @@ a {
     color: #2C3E50;
     font-weight: bold;
 }
+
+/* Dark theme */
+body.dark {
+    background: #1a1a1a;
+    color: white;
+}
+
+body.dark .container {
+    background: #2c2c2c;
+    color: white;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
