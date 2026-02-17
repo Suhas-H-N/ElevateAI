@@ -76,19 +76,29 @@ def interview():
     if "user" not in session:
         return redirect(url_for("login"))
 
+    # Ensure session variables exist
     if "q_index" not in session:
         session["q_index"] = 0
 
+    if "answers" not in session:
+        session["answers"] = []
+
     if request.method == "POST":
+        answer = request.form["answer"]
+        session["answers"].append(answer)
         session["q_index"] += 1
 
+    # If finished all questions → show result
     if session["q_index"] >= len(questions):
+        score = sum(1 for a in session["answers"] if len(a.strip().split()) >= 3)
+
         session.pop("q_index", None)
-        return render_template("result.html")
+        session.pop("answers", None)
+
+        return render_template("result.html", score=score, total=len(questions))
 
     question = questions[session["q_index"]]
     return render_template("interview.html", question=question)
-
 
 if __name__ == "__main__":
     with app.app_context():

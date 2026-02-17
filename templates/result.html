@@ -5,14 +5,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
 <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
 <div class="container">
     <h2>Interview Completed 🎉</h2>
-    <p>Great job! More scoring features coming soon.</p>
+
+    <p>Your Score: <b>{{ score }} / {{ total }}</b></p>
 
     <br>
+
     <a href="/dashboard"><button>Back to Dashboard</button></a>
 </div>
+
 <script>
 function toggleTheme() {
     document.body.classList.toggle("dark");
