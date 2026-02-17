@@ -1,6 +1,23 @@
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #a8e6cf, #dcedc1);
+    font-family: "Times New Roman", Times, serif;
+
+    /* Choose ONE background by uncommenting */
+
+    /* 1️⃣ Minimal professional */
+    /* background: linear-gradient(135deg, #F5F7FA, #2C3E50); */
+
+    /* 2️⃣ Soft pastel calming */
+    /* background: linear-gradient(135deg, #FFDEE9, #B5FFFC); */
+
+    /* 3️⃣ Elegant warm */
+    /* background: linear-gradient(135deg, #FFF8E7, #3B3B3B); */
+
+    /* 4️⃣ Fresh modern (ACTIVE) */
+    background: linear-gradient(120deg, #84FAB0, #8FD3F4);
+
+    /* 5️⃣ Sleek high contrast */
+    /* background: linear-gradient(135deg, #EAEAEA, #1A1A1A); */
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,39 +27,40 @@ body {
 
 .container {
     background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     text-align: center;
-    width: 300px;
+    width: 320px;
 }
 
-input {
-    width: 90%;
+h2 {
+    margin-bottom: 20px;
+}
+
+input, textarea {
+    width: 92%;
     padding: 10px;
     margin: 8px 0;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 button {
     width: 100%;
     padding: 10px;
-    background: #4facfe;
+    background: #2C3E50;
     border: none;
     color: white;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
+    font-family: "Times New Roman", Times, serif;
 }
 
 button:hover {
-    background: #00c6ff;
-}
-
-a {
-    text-decoration: none;
-    color: #4facfe;
+    background: #1a252f;
 }
 
 .signup-btn {
@@ -51,4 +69,10 @@ a {
 
 .signup-btn:hover {
     background: #43a047;
+}
+
+a {
+    text-decoration: none;
+    color: #2C3E50;
+    font-weight: bold;
 }
