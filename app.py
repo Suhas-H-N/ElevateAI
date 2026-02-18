@@ -66,10 +66,13 @@ def signup():
 # ---------------- DASHBOARD ----------------
 @app.route("/dashboard")
 def dashboard():
-    if "user" in session:
-        return render_template("dashboard.html", username=session["user"])
-    return redirect(url_for("login"))
+    if "user" not in session:
+        return redirect(url_for("login"))
 
+    # Get all past interview results of this user
+    results = InterviewResult.query.filter_by(username=session["user"]).all()
+
+    return render_template("dashboard.html", username=session["user"], results=results)
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
