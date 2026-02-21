@@ -82,25 +82,44 @@ def logout():
 
 
 # ---------------- QUESTIONS ----------------
-questions = [
-    "Tell me about yourself.",
-    "What are your strengths?",
-    "Why should we hire you?",
-    "Where do you see yourself in 5 years?"
-]
-
-
+question_bank = {
+    "hr": [
+        "Tell me about yourself.",
+        "Why should we hire you?",
+        "What are your strengths?",
+        "Where do you see yourself in 5 years?"
+    ],
+    "technical": [
+        "Explain OOP concepts.",
+        "What is a database?",
+        "Difference between list and tuple.",
+        "What is Flask?"
+    ],
+    "communication": [
+        "Describe your favorite project.",
+        "How do you handle pressure?",
+        "Explain teamwork in your words.",
+        "Describe a challenge you faced."
+    ]
+}
 # ---------------- INTERVIEW ----------------
 @app.route("/interview", methods=["GET", "POST"])
 def interview():
     if "user" not in session:
         return redirect(url_for("login"))
 
-    if "q_index" not in session:
-        session["q_index"] = 0
+    # Get selected category
+    category = request.args.get("category")
 
-    if "answers" not in session:
+    if category:
+        session["category"] = category
+        session["q_index"] = 0
         session["answers"] = []
+
+    if "category" not in session:
+        return redirect(url_for("dashboard"))
+
+    questions = question_bank[session["category"]]
 
     if request.method == "POST":
         answer = request.form["answer"]
@@ -120,25 +139,12 @@ def interview():
 
         session.pop("q_index", None)
         session.pop("answers", None)
+        session.pop("category", None)
 
         return render_template("result.html", score=score, total=len(questions))
 
     question = questions[session["q_index"]]
     return render_template("interview.html", question=question)
-
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    if "q_index" not in session:
-        session["q_index"] = 0
-
-    if "answers" not in session:
-        session["answers"] = []
-
-    if request.method == "POST":
-        answer = request.form["answer"]
-        session["answers"].append(answer)
-        session["q_index"] += 1
 
     # Finish interview → calculate score + save to DB
     if session["q_index"] >= len(questions):
