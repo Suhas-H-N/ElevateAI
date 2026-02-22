@@ -140,21 +140,29 @@ def interview():
         session["q_index"] += 1
 
     if session["q_index"] >= len(questions):
-        score = sum(1 for a in session["answers"] if len(a.strip().split()) >= 3)
+    score = sum(1 for a in session["answers"] if len(a.strip().split()) >= 3)
 
-        result = InterviewResult(
-            username=session["user"],
-            score=score,
-            total=len(questions)
-        )
-        db.session.add(result)
-        db.session.commit()
+    # NEW: generate feedback
+    feedback_list = generate_feedback(session["answers"])
 
-        session.pop("q_index", None)
-        session.pop("answers", None)
-        session.pop("category", None)
+    result = InterviewResult(
+        username=session["user"],
+        score=score,
+        total=len(questions)
+    )
+    db.session.add(result)
+    db.session.commit()
 
-        return render_template("result.html", score=score, total=len(questions))
+    session.pop("q_index", None)
+    session.pop("answers", None)
+    session.pop("category", None)
+
+    return render_template(
+        "result.html",
+        score=score,
+        total=len(questions),
+        feedback_list=feedback_list
+    )
 
     question = questions[session["q_index"]]
     return render_template("interview.html", question=question)
