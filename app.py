@@ -24,7 +24,20 @@ class InterviewResult(db.Model):
     score = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
 
+def generate_feedback(answers):
+    feedback = []
 
+    for ans in answers:
+        word_count = len(ans.strip().split())
+
+        if word_count < 3:
+            feedback.append("Answer too short. Try to elaborate.")
+        elif word_count < 8:
+            feedback.append("Good, but you can explain more clearly.")
+        else:
+            feedback.append("Strong answer with good detail.")
+
+    return feedback
 # ---------------- LOGIN ----------------
 @app.route("/", methods=["GET", "POST"])
 def login():
