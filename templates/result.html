@@ -12,7 +12,13 @@
     <h2>Interview Completed 🎉</h2>
 
     <p>Your Score: <b>{{ score }} / {{ total }}</b></p>
+    <h3>AI Feedback</h3>
 
+<ul>
+    {% for f in feedback_list %}
+        <li>{{ f }}</li>
+    {% endfor %}
+</ul>
     <br>
 
     <a href="/dashboard"><button>Back to Dashboard</button></a>
