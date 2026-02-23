@@ -163,7 +163,6 @@ def interview():
         total=len(questions),
         feedback_list=feedback_list
     )
-
     question = questions[session["q_index"]]
     return render_template("interview.html", question=question)
 
