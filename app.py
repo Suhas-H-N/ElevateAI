@@ -9,13 +9,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-
 # ---------------- USER TABLE ----------------
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-
 
 # ---------------- INTERVIEW RESULT TABLE ----------------
 class InterviewResult(db.Model):
@@ -24,77 +22,20 @@ class InterviewResult(db.Model):
     score = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
 
+# ---------------- AI FEEDBACK FUNCTION ----------------
 def generate_feedback(answers):
     feedback = []
-
     for ans in answers:
         word_count = len(ans.strip().split())
-
         if word_count < 3:
             feedback.append("Answer too short. Try to elaborate.")
         elif word_count < 8:
             feedback.append("Good, but you can explain more clearly.")
         else:
             feedback.append("Strong answer with good detail.")
-
     return feedback
-# ---------------- LOGIN ----------------
-@app.route("/", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
 
-        user = User.query.filter_by(username=username, password=password).first()
-
-        if user:
-            session["user"] = username
-            return redirect(url_for("dashboard"))
-        else:
-            return "Invalid credentials"
-
-    return render_template("login.html")
-
-
-# ---------------- SIGNUP ----------------
-@app.route("/signup", methods=["GET", "POST"])
-def signup():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            return "Username already exists. Try another."
-
-        new_user = User(username=username, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-
-        return redirect(url_for("login"))
-
-    return render_template("signup.html")
-
-
-# ---------------- DASHBOARD ----------------
-@app.route("/dashboard")
-def dashboard():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    # Get all past interview results of this user
-    results = InterviewResult.query.filter_by(username=session["user"]).all()
-
-    return render_template("dashboard.html", username=session["user"], results=results)
-
-# ---------------- LOGOUT ----------------
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect(url_for("login"))
-
-
-# ---------------- QUESTIONS ----------------
+# ---------------- QUESTION BANK ----------------
 question_bank = {
     "hr": [
         "Tell me about yourself.",
@@ -115,6 +56,58 @@ question_bank = {
         "Describe a challenge you faced."
     ]
 }
+
+# ---------------- LOGIN ----------------
+@app.route("/", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        user = User.query.filter_by(username=username, password=password).first()
+
+        if user:
+            session["user"] = username
+            return redirect(url_for("dashboard"))
+        else:
+            return "Invalid credentials"
+
+    return render_template("login.html")
+
+# ---------------- SIGNUP ----------------
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return "Username already exists. Try another."
+
+        new_user = User(username=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+
+    return render_template("signup.html")
+
+# ---------------- DASHBOARD ----------------
+@app.route("/dashboard")
+def dashboard():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    results = InterviewResult.query.filter_by(username=session["user"]).all()
+    return render_template("dashboard.html", username=session["user"], results=results)
+
+# ---------------- LOGOUT ----------------
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("login"))
+
 # ---------------- INTERVIEW ----------------
 @app.route("/interview", methods=["GET", "POST"])
 def interview():
@@ -123,7 +116,8 @@ def interview():
 
     category = request.args.get("category")
 
-    if category:
+    # Reset only when new category selected
+    if category and session.get("category") != category:
         session["category"] = category
         session["q_index"] = 0
         session["answers"] = []
@@ -138,10 +132,10 @@ def interview():
         session["answers"].append(answer)
         session["q_index"] += 1
 
+    # Finish interview
     if session["q_index"] >= len(questions):
         score = sum(1 for a in session["answers"] if len(a.strip().split()) >= 3)
 
-        # NEW: generate feedback
         feedback_list = generate_feedback(session["answers"])
 
         result = InterviewResult(
@@ -166,29 +160,7 @@ def interview():
     question = questions[session["q_index"]]
     return render_template("interview.html", question=question)
 
-    # Finish interview → calculate score + save to DB
-    if session["q_index"] >= len(questions):
-        score = sum(1 for a in session["answers"] if len(a.strip().split()) >= 3)
-
-        # Save history
-        result = InterviewResult(
-            username=session["user"],
-            score=score,
-            total=len(questions)
-        )
-        db.session.add(result)
-        db.session.commit()
-
-        session.pop("q_index", None)
-        session.pop("answers", None)
-
-        return render_template("result.html", score=score, total=len(questions))
-
-    question = questions[session["q_index"]]
-    return render_template("interview.html", question=question)
-
-
-# ---------------- RUN APP ----------------
+# ---------------- RUN ----------------
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
