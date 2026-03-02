@@ -51,11 +51,31 @@ input {
     outline: none;
     font-size: 14px;
     transition: 0.2s;
+    box-sizing: border-box;
 }
 
 input:focus {
     border-color: #4CAF50;
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
+}
+
+/* ===== PASSWORD WRAPPER ===== */
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.toggle-eye:hover {
+    opacity: 1;
 }
 
 /* ===== BUTTON ===== */
@@ -119,6 +139,19 @@ body.dark input {
 
 body.dark a {
     color: #8FD3F4;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 30px 22px;
+    }
+
+    body {
+        padding: 20px;
+        align-items: center;
+    }
 }
 
 /* ===== ANIMATION ===== */
