@@ -435,3 +435,6 @@ body.dark .result-card {
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
+.signup-btn {
+    background: linear-gradient(135deg, #4CAF50, #2C3E50);
+}
