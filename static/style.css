@@ -363,3 +363,75 @@ body.dark textarea {
     text-decoration: none;
     font-weight: 500;
 }
+/* ===== RESULT PAGE ===== */
+.result-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.result-card {
+    background: rgba(255,255,255,0.96);
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+body.dark .result-card {
+    background: rgba(40,40,40,0.96);
+}
+
+/* ===== SUCCESS TITLE ===== */
+.success-title {
+    margin-bottom: 20px;
+}
+
+/* ===== SCORE BOX ===== */
+.score-box {
+    background: linear-gradient(135deg, #2C3E50, #4CAF50);
+    color: white;
+    padding: 18px;
+    border-radius: 14px;
+    margin: 18px 0 26px;
+}
+
+.score-box span {
+    display: block;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.score-box strong {
+    font-size: 26px;
+}
+
+/* ===== FEEDBACK ===== */
+.feedback-title {
+    margin-bottom: 12px;
+}
+
+.feedback-list {
+    text-align: left;
+    margin: 0 auto 20px;
+    padding-left: 18px;
+    line-height: 1.6;
+}
+
+/* ===== DASHBOARD BUTTON ===== */
+.dashboard-btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2C3E50, #4CAF50);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
