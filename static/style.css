@@ -1,99 +1,134 @@
+/* ===== GLOBAL ===== */
 body {
-    font-family: "Times New Roman", Times, serif;
-
-    /* Choose ONE background by uncommenting */
-
-    /* 1️⃣ Minimal professional */
-    /* background: linear-gradient(135deg, #F5F7FA, #2C3E50); */
-
-    /* 2️⃣ Soft pastel calming */
-    /* background: linear-gradient(135deg, #FFDEE9, #B5FFFC); */
-
-    /* 3️⃣ Elegant warm */
-    /* background: linear-gradient(135deg, #FFF8E7, #3B3B3B); */
-
-    /* 4️⃣ Fresh modern (ACTIVE) */
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(120deg, #84FAB0, #8FD3F4);
-
-    /* 5️⃣ Sleek high contrast */
-    /* background: linear-gradient(135deg, #EAEAEA, #1A1A1A); */
-
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    transition: all 0.3s ease;
 }
 
+/* ===== CONTAINER ===== */
 .container {
-    background: white;
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 40px 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     text-align: center;
-    width: 320px;
+    width: 340px;
+    animation: fadeIn 0.6s ease;
 }
 
+/* ===== LOGO ===== */
+.logo {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+/* ===== HEADINGS ===== */
 h2 {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
+    font-weight: 600;
 }
 
-input, textarea {
-    width: 92%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-family: "Times New Roman", Times, serif;
+/* ===== INPUTS ===== */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    transition: 0.2s;
 }
 
+input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
+}
+
+/* ===== BUTTON ===== */
 button {
     width: 100%;
-    padding: 10px;
-    background: #2C3E50;
+    padding: 12px;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #2C3E50, #4CAF50);
     border: none;
     color: white;
-    font-size: 16px;
-    border-radius: 6px;
+    font-size: 15px;
+    border-radius: 8px;
     cursor: pointer;
-    font-family: "Times New Roman", Times, serif;
+    font-weight: 500;
+    transition: 0.25s ease;
 }
 
 button:hover {
-    background: #1a252f;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 
-.signup-btn {
-    background: #4CAF50;
-}
-
-.signup-btn:hover {
-    background: #43a047;
+/* ===== LINKS ===== */
+.bottom-text {
+    margin-top: 18px;
+    font-size: 14px;
 }
 
 a {
-    text-decoration: none;
     color: #2C3E50;
-    font-weight: bold;
+    font-weight: 600;
+    text-decoration: none;
 }
 
-/* Dark theme */
-body.dark {
-    background: #1a1a1a;
-    color: white;
-}
-
-body.dark .container {
-    background: #2c2c2c;
-    color: white;
-}
-
+/* ===== THEME TOGGLE ===== */
 .theme-toggle {
     position: absolute;
     top: 20px;
     right: 20px;
-    font-size: 20px;
+    font-size: 22px;
     cursor: pointer;
     background: none;
     border: none;
+}
+
+/* ===== DARK MODE ===== */
+body.dark {
+    background: linear-gradient(135deg, #141E30, #243B55);
+    color: white;
+}
+
+body.dark .container {
+    background: rgba(40, 40, 40, 0.95);
+}
+
+body.dark input {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
+body.dark a {
+    color: #8FD3F4;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
