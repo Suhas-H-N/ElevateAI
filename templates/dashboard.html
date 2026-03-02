@@ -1,43 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Elevate AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+    <div class="nav-left">🚀 Elevate AI</div>
 
-<div class="container">
-    <h2>Welcome, {{ username }} 👋</h2>
+    <div class="nav-right">
+        <span class="user-badge">👤 {{ username }}</span>
+        <a href="/logout">Logout</a>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+</nav>
 
-    <br>
+<!-- ===== DASHBOARD ===== -->
+<div class="dashboard-container">
 
-    <h3>Your Past Interview Scores</h3>
+    <h2 class="dashboard-title">Welcome back, {{ username }} 👋</h2>
 
-    {% if results %}
-        <ul>
-            {% for r in results %}
-                <li>Score: {{ r.score }} / {{ r.total }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No interview attempts yet.</p>
-    {% endif %}
+    <!-- ===== SCORES ===== -->
+    <div class="card">
+        <h3>Your Past Interview Scores</h3>
 
-    <br>
+        {% if results %}
+            <div class="score-list">
+                {% for r in results %}
+                    <div class="score-item">
+                        <span>Score</span>
+                        <strong>{{ r.score }} / {{ r.total }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-text">No interview attempts yet.</p>
+        {% endif %}
+    </div>
 
-    <h3>Choose Interview Type</h3>
+    <!-- ===== INTERVIEW TYPES ===== -->
+    <div class="card">
+        <h3>Choose Interview Type</h3>
 
-<a href="/interview?category=hr"><button>HR Interview</button></a>
-<br><br>
-<a href="/interview?category=technical"><button>Technical Interview</button></a>
-<br><br>
-<a href="/interview?category=communication"><button>Communication Interview</button></a>
+        <div class="interview-grid">
+            <a href="/interview?category=hr" class="interview-btn">🧑‍💼 HR Interview</a>
+            <a href="/interview?category=technical" class="interview-btn">💻 Technical</a>
+            <a href="/interview?category=communication" class="interview-btn">🗣 Communication</a>
+        </div>
+    </div>
 
-    <br><br>
-
-    <a href="/logout">Logout</a>
 </div>
 
 <script>
@@ -51,7 +68,6 @@ function toggleTheme() {
     }
 }
 
-// Load saved theme
 window.onload = function () {
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark");
