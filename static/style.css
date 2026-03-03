@@ -1,50 +1,4 @@
-/* ===== NAVBAR ===== */
-/* ===== NAVBAR ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    z-index: 1000;
-    box-sizing: border-box; /* 🔥 IMPORTANT FIX */
-}
-
-.nav-left {
-    font-weight: 600;
-    font-size: 20px;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0; /* 🔥 prevents cutting */
-}
-
-.nav-right a {
-    text-decoration: none;
-    font-weight: 500;
-    color: #2C3E50;
-}
-
-/* dark navbar */
-body.dark .navbar {
-    background: rgba(30,30,30,0.9);
-}
-
-body.dark .nav-right a {
-    color: #8FD3F4;
-}
-
-/* ===== GLOBAL ===== */
+/* ===== GLOBAL BODY FIX ===== */
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(120deg, #84FAB0, #8FD3F4);
@@ -53,7 +7,7 @@ body {
     padding-top: 80px; /* space for navbar */
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* IMPORTANT */
+    align-items: flex-start; /* 🔥 IMPORTANT */
     transition: all 0.3s ease;
 }
 
@@ -159,13 +113,12 @@ a {
 
 /* ===== THEME TOGGLE ===== */
 .theme-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 22px;
+    font-size: 20px;
     cursor: pointer;
     background: none;
     border: none;
+    padding: 4px 6px;
+    margin-left: 4px;
 }
 
 /* ===== DARK MODE ===== */
