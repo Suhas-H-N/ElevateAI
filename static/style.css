@@ -80,25 +80,27 @@ input:focus {
 }
 
 /* ===== BUTTON ===== */
+/* ===== BUTTON STYLE ===== */
 button {
     width: 100%;
     padding: 12px;
     margin-top: 10px;
-    background: linear-gradient(135deg, #2C3E50, #4CAF50);
+    background: #4A90E2; /* light professional blue */
     border: none;
     color: white;
     font-size: 15px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
-    transition: 0.25s ease;
+    transition: all 0.25s ease;
 }
 
+/* Hover */
 button:hover {
+    background: #357ABD;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-
 /* ===== LINKS ===== */
 .bottom-text {
     margin-top: 18px;
@@ -373,23 +375,18 @@ body.dark .result-card {
 }
 
 /* ===== DASHBOARD BUTTON ===== */
-.dashboard-btn {
-    display: inline-block;
-    padding: 12px 22px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #2C3E50, #4CAF50);
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s ease;
-}
+dashboard-btn
 
 .dashboard-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 .signup-btn {
-    background: linear-gradient(135deg, #4CAF50, #2C3E50);
+    background: #5CB85C;
+}
+
+.signup-btn:hover {
+    background: #4CA64C;
 }
 .navbar {
     position: fixed;
