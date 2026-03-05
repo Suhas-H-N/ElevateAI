@@ -69,8 +69,6 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-
-        if user:
             session["user"] = username
             return redirect(url_for("dashboard"))
         else:
