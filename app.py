@@ -65,7 +65,9 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        user = User.query.filter_by(username=username, password=password).first()
+        user = User.query.filter_by(username=username).first()
+
+        if user and check_password_hash(user.password, password):
 
         if user:
             session["user"] = username
@@ -86,7 +88,13 @@ def signup():
         if existing_user:
             return "Username already exists. Try another."
 
-        new_user = User(username=username, password=password)
+        hashed_password = generate_password_hash(password)
+
+        new_user = User(
+        username=username,
+        password=hashed_password
+        )
+
         db.session.add(new_user)
         db.session.commit()
 
