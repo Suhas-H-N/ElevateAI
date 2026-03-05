@@ -441,3 +441,12 @@ body.dark .result-card {
 body.dark .navbar {
     background: rgba(30,30,30,0.95);
 }
+.nav-right a {
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.nav-right a:hover {
+    background: rgba(0,0,0,0.08);
+}
