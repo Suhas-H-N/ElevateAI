@@ -1,26 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup - Elevate AI</title>
+{% extends "base.html" %}
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% block title %}Signup - Elevate AI{% endblock %}
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar">
-    <div class="nav-left">🚀 Elevate AI</div>
+{% block content %}
 
-    <div class="nav-right">
-        <!-- links -->
-        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-    </div>
-</nav>
-
-<!-- ===== SIGNUP CARD ===== -->
 <div class="container">
     <h2>Create Free Account</h2>
     <p class="subtitle">Start your AI interview journey</p>
@@ -43,27 +26,10 @@
 </div>
 
 <script>
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-
-    if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-    } else {
-        localStorage.setItem("theme", "light");
-    }
-}
-
 function togglePassword() {
     const pwd = document.getElementById("password");
     pwd.type = pwd.type === "password" ? "text" : "password";
 }
-
-window.onload = function () {
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-    }
-};
 </script>
 
-</body>
-</html>
+{% endblock %}

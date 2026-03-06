@@ -1,39 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result - Elevate AI</title>
+{% extends "base.html" %}
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% block title %}Result - Elevate AI{% endblock %}
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar">
-    <div class="nav-left">🚀 Elevate AI</div>
+{% block content %}
 
-    <div class="nav-right">
-    <a href="/logout">Logout</a>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-    </div>
-</nav>
-
-<!-- ===== RESULT CONTAINER ===== -->
 <div class="result-container">
 
     <div class="result-card">
 
         <h2 class="success-title">🎉 Interview Completed!</h2>
 
-        <!-- ===== SCORE BOX ===== -->
         <div class="score-box">
             <span>Your Score</span>
             <strong>{{ score }} / {{ total }}</strong>
         </div>
 
-        <!-- ===== FEEDBACK ===== -->
         <h3 class="feedback-title">🤖 AI Feedback</h3>
 
         {% if feedback_list %}
@@ -53,23 +34,4 @@
     </div>
 </div>
 
-<script>
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-
-    if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-    } else {
-        localStorage.setItem("theme", "light");
-    }
-}
-
-window.onload = function () {
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-    }
-};
-</script>
-
-</body>
-</html>
+{% endblock %}
