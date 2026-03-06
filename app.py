@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 import os
@@ -23,6 +24,7 @@ class InterviewResult(db.Model):
     username = db.Column(db.String(100), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
 # ---------------- AI FEEDBACK FUNCTION ----------------
 def generate_feedback(answers):

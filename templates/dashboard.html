@@ -19,6 +19,7 @@
                     <div class="score-item">
                         <span>Score</span>
                         <strong>{{ r.score }} / {{ r.total }}</strong>
+                        <span>{{ r.date.strftime('%d %b %Y') }}</span>
                     </div>
                 {% endfor %}
             </div>
