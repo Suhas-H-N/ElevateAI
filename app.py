@@ -166,7 +166,12 @@ def interview():
         )
 
     question = questions[session["q_index"]]
-    return render_template("interview.html", question=question)
+    return render_template(
+    "interview.html",
+    question=question,
+    current=session["q_index"] + 1,
+    total=len(questions)
+    )
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":

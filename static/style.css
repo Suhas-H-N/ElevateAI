@@ -450,3 +450,8 @@ body.dark .navbar {
 .nav-right a:hover {
     background: rgba(0,0,0,0.08);
 }
+.question-progress {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 10px;
+}
