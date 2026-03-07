@@ -8,7 +8,21 @@
 <div class="dashboard-container">
 
     <h2 class="dashboard-title">Welcome back, {{ username }} 👋</h2>
+<div class="card">
+    <h3>Interview Statistics</h3>
 
+    <div class="score-list">
+        <div class="score-item">
+            <span>Total Attempts</span>
+            <strong>{{ total_attempts }}</strong>
+        </div>
+
+        <div class="score-item">
+            <span>Best Score</span>
+            <strong>{{ best_score }}</strong>
+        </div>
+    </div>
+</div>
     <!-- ===== SCORES ===== -->
     <div class="card">
         <h3>Your Past Interview Scores</h3>

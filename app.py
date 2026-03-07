@@ -24,7 +24,7 @@ class InterviewResult(db.Model):
     username = db.Column(db.String(100), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=datetime.now)
 
 # ---------------- AI FEEDBACK FUNCTION ----------------
 def generate_feedback(answers):
@@ -110,7 +110,20 @@ def dashboard():
         return redirect(url_for("login"))
 
     results = InterviewResult.query.filter_by(username=session["user"]).all()
-    return render_template("dashboard.html", username=session["user"], results=results)
+
+    total_attempts = len(results)
+
+    best_score = 0
+    if results:
+        best_score = max(r.score for r in results)
+
+    return render_template(
+        "dashboard.html",
+        username=session["user"],
+        results=results,
+        total_attempts=total_attempts,
+        best_score=best_score
+    )
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
