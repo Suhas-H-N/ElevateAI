@@ -22,6 +22,7 @@ class User(db.Model):
 class InterviewResult(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(50))
     score = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
@@ -162,9 +163,10 @@ def interview():
         feedback_list = generate_feedback(session["answers"])
 
         result = InterviewResult(
-            username=session["user"],
-            score=score,
-            total=len(questions)
+        username=session["user"],
+        category=session["category"],
+        score=score,
+        total=len(questions)
         )
         db.session.add(result)
         db.session.commit()

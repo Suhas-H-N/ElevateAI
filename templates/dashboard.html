@@ -19,7 +19,7 @@
 
         <div class="score-item">
             <span>Best Score</span>
-            <strong>{{ best_score }}</strong>
+            <strong>{{ best_score }}</strong>   
         </div>
     </div>
 </div>
@@ -31,9 +31,9 @@
             <div class="score-list">
                 {% for r in results %}
                     <div class="score-item">
-                        <span>Score</span>
-                        <strong>{{ r.score }} / {{ r.total }}</strong>
-                        <span>{{ r.date.strftime('%d %b %Y') }}</span>
+                    <span>{{ r.category | capitalize }}</span>
+                    <strong>{{ r.score }} / {{ r.total }}</strong>
+                    <span>{{ r.date.strftime('%d %b %Y') }}</span>
                     </div>
                 {% endfor %}
             </div>
