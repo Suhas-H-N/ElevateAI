@@ -90,3 +90,12 @@ http://127.0.0.1:5000
 4. Choose interview mode (Timed or Untimed)
 5. Answer questions and receive AI-style feedback
 6. View your score and interview statistics on the dashboard
+
+## Future Improvements
+
+- AI answer evaluation using real AI models
+- Resume upload for personalized interview questions
+- Voice-based interview system
+- Leaderboard for top performers
+- Interview timer progress bar
+- Admin dashboard
