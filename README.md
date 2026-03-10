@@ -43,3 +43,43 @@ Version Control:
 ---
 
 ## Project Structure
+
+ElevateAI
+│
+├── app.py
+├── README.md
+│
+├── instance
+│   └── users.db
+│
+├── static
+│   └── style.css
+│
+└── templates
+    ├── base.html
+    ├── dashboard.html
+    ├── interview.html
+    ├── login.html
+    ├── mode.html
+    ├── result.html
+    └── signup.html
+
+## Installation
+
+Clone the repository
+
+Navigate to the project folder
+
+cd ElevateAI
+
+Install dependencies:
+pip install flask
+pip install flask_sqlalchemy
+
+Run the application
+
+Open the browser and visit
+
+http://127.0.0.1:5000
+
+
