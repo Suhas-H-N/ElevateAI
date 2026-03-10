@@ -99,3 +99,10 @@ http://127.0.0.1:5000
 - Leaderboard for top performers
 - Interview timer progress bar
 - Admin dashboard
+
+## Author
+
+**Suhas H N**
+
+GitHub:  
+https://github.com/Suhas-H-N
