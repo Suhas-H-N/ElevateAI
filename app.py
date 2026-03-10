@@ -125,6 +125,14 @@ def dashboard():
         total_attempts=total_attempts,
         best_score=best_score
     )
+@app.route("/mode")
+def mode():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    category = request.args.get("category")
+
+    return render_template("mode.html", category=category)
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
