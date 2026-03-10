@@ -82,4 +82,11 @@ Open the browser and visit
 
 http://127.0.0.1:5000
 
+## Usage
 
+1. Create a new account using the Signup page
+2. Login to access the dashboard
+3. Select interview category (HR, Technical, Communication)
+4. Choose interview mode (Timed or Untimed)
+5. Answer questions and receive AI-style feedback
+6. View your score and interview statistics on the dashboard
