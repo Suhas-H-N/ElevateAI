@@ -3,8 +3,6 @@
 ElevateAI is an AI-powered interview preparation platform built using Flask.  
 It helps users practice interview questions, receive feedback, and track their performance.
 
----
-
 ## Features
 
 - User Signup and Login
@@ -17,8 +15,6 @@ It helps users practice interview questions, receive feedback, and track their p
 - Category-wise score tracking
 - Dark / Light theme
 - Responsive UI
-
----
 
 ## Tech Stack
 
@@ -39,8 +35,6 @@ Database:
 Version Control:
 - Git
 - GitHub
-
----
 
 ## Project Structure
 
