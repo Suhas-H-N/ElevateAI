@@ -4,27 +4,50 @@
 
 {% block content %}
 
-<div class="container">
-    <h2>Create Free Account</h2>
-    <p class="subtitle">Start your AI interview journey</p>
+<div class="auth-container">
 
-    <form method="POST">
-        <input type="text" name="username" placeholder="Choose username" required>
+    <div class="auth-card">
 
-        <div class="password-wrapper">
-            <input type="password" id="password" name="password" placeholder="Create password" required>
-            <span class="toggle-eye" onclick="togglePassword()">👁️</span>
-        </div>
+        <!-- HEADER -->
+        <h2>Create Account 🚀</h2>
+        <p class="subtitle">Start your AI interview journey today</p>
 
-        <button type="submit" class="signup-btn">Sign Up</button>
-    </form>
+        <!-- FORM -->
+        <form method="POST" class="auth-form">
 
-    <p class="bottom-text">
-        Already have an account?
-        <a href="/">Back to Login</a>
-    </p>
+            <input 
+                type="text" 
+                name="username" 
+                placeholder="Choose username" 
+                required
+            >
+
+            <div class="password-wrapper">
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Create password" 
+                    required
+                >
+                <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+            </div>
+
+            <button type="submit" class="auth-btn signup-btn">Sign Up</button>
+
+        </form>
+
+        <!-- FOOTER -->
+        <p class="bottom-text">
+            Already have an account?
+            <a href="/">Login</a>
+        </p>
+
+    </div>
+
 </div>
 
+<!-- PASSWORD TOGGLE -->
 <script>
 function togglePassword() {
     const pwd = document.getElementById("password");
