@@ -8,30 +8,51 @@
 
     <div class="result-card">
 
-        <h2 class="success-title">🎉 Interview Completed!</h2>
-
-        <div class="score-box">
-            <span>Your Score</span>
-            <strong>{{ score }} / {{ total }}</strong>
+        <!-- HEADER -->
+        <div class="result-header">
+            <h2>🎉 Interview Completed!</h2>
+            <p class="subtitle">Here’s your performance summary</p>
         </div>
 
-        <h3 class="feedback-title">🤖 AI Feedback</h3>
+        <!-- SCORE -->
+        <div class="score-box">
+            <span>Your Score</span>
+            <h1>{{ score }} / {{ total }}</h1>
+        </div>
 
-        {% if feedback_list %}
-            <ul class="feedback-list">
-                {% for f in feedback_list %}
-                    <li>{{ f }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="empty-text">No feedback available.</p>
-        {% endif %}
+        <!-- PERFORMANCE MESSAGE -->
+        <div class="performance-msg">
+            {% if score == total %}
+                <p class="excellent">🔥 Excellent! Perfect score!</p>
+            {% elif score >= total // 2 %}
+                <p class="good">👍 Good job! Keep improving.</p>
+            {% else %}
+                <p class="improve">⚡ Needs improvement. Practice more!</p>
+            {% endif %}
+        </div>
 
-        <a href="/dashboard" class="dashboard-btn">
-            ← Back to Dashboard
-        </a>
+        <!-- FEEDBACK -->
+        <div class="feedback-section">
+            <h3>🤖 AI Feedback</h3>
+
+            {% if feedback_list %}
+                <ul class="feedback-list">
+                    {% for f in feedback_list %}
+                        <li>✔ {{ f }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-text">No feedback available.</p>
+            {% endif %}
+        </div>
+
+        <!-- ACTION BUTTON -->
+        <div class="result-actions">
+            <a href="/dashboard" class="dashboard-btn">← Back to Dashboard</a>
+        </div>
 
     </div>
+
 </div>
 
 {% endblock %}
