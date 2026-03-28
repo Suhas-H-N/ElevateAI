@@ -7,19 +7,42 @@
 <div class="interview-container">
 
     <div class="interview-card">
-        <h2>🤖 AI Interview Question</h2>
-        <p class="question-progress">Question {{ current }} / {{ total }}</p>
+
+        <!-- HEADER -->
+        <div class="interview-header">
+            <h2>🤖 AI Interview</h2>
+            <p class="question-progress">
+                Question {{ current }} of {{ total }}
+            </p>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ (current / total) * 100 }}%;"></div>
+        </div>
+
+        <!-- QUESTION -->
         <div class="question-box">
             {{ question }}
         </div>
 
-        <form method="POST">
-            <textarea name="answer" rows="5" placeholder="Type your answer here..." required></textarea>
+        <!-- FORM -->
+        <form method="POST" class="answer-form">
 
-            <button type="submit" class="next-btn">Next Question →</button>
+            <textarea 
+                name="answer" 
+                rows="5" 
+                placeholder="Type your answer here..." 
+                required>
+            </textarea>
+
+            <div class="button-group">
+                <a href="/dashboard" class="back-btn">← Exit</a>
+                <button type="submit" class="next-btn">Next →</button>
+            </div>
+
         </form>
 
-        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
     </div>
 
 </div>
