@@ -1,31 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %}Elevate AI | Login{% endblock %}
+{% block title %}Login - Elevate AI{% endblock %}
 
 {% block content %}
 
-<div class="container">
-    <p class="subtitle">Smart Interview Preparation Platform</p>
+<div class="auth-container">
 
-    <h2>Welcome Back</h2>
+    <div class="auth-card">
 
-    <form method="POST">
-        <input type="text" name="username" placeholder="Enter username" required>
+        <!-- HEADER -->
+        <h2>Welcome Back 👋</h2>
+        <p class="subtitle">Login to continue your AI interview journey</p>
 
-        <div class="password-wrapper">
-            <input type="password" id="password" name="password" placeholder="Enter password" required>
-            <span class="toggle-eye" onclick="togglePassword()">👁️</span>
-        </div>
+        <!-- FORM -->
+        <form method="POST" class="auth-form">
 
-        <button type="submit">Login</button>
-    </form>
+            <input 
+                type="text" 
+                name="username" 
+                placeholder="Enter username" 
+                required
+            >
 
-    <p class="bottom-text">
-        New here?
-        <a href="/signup">Create an account</a>
-    </p>
+            <div class="password-wrapper">
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Enter password" 
+                    required
+                >
+                <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+            </div>
+
+            <button type="submit" class="auth-btn">Login</button>
+
+        </form>
+
+        <!-- FOOTER -->
+        <p class="bottom-text">
+            Don’t have an account?
+            <a href="/signup">Create one</a>
+        </p>
+
+    </div>
+
 </div>
 
+<!-- PASSWORD TOGGLE -->
 <script>
 function togglePassword() {
     const pwd = document.getElementById("password");
