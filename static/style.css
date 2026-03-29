@@ -89,7 +89,7 @@ body {
     font-size: 14px;
 }
 
-.flash.success { background: #D4EDDA; color: #155724; }
+.flash.success { background: #E8F5E8; color: #2E7D32; border: 1px solid #4CAF50; }
 .flash.danger { background: #F8D7DA; color: #721C24; }
 .flash.warning { background: #FFF3CD; color: #856404; }
 .flash.info { background: #D1ECF1; color: #0C5460; }
@@ -142,15 +142,15 @@ input:focus, textarea:focus {
 button, .auth-btn {
     width: 100%;
     padding: 12px;
-    background: #4A90E2;
+    background: #4CAF50;
     border: none;
     color: white;
     border-radius: 8px;
     cursor: pointer;
 }
 
-button:hover {
-    background: #357ABD;
+button:hover, .auth-btn:hover {
+    background: #45a049;
 }
 
 /* ===== DASHBOARD ===== */
@@ -518,6 +518,16 @@ body.dark .auth-card,
 body.dark .interview-card,
 body.dark .result-card {
     background: rgba(40,40,40,0.95);
+}
+
+body.dark button,
+body.dark .auth-btn {
+    background: #66BB6A;
+}
+
+body.dark button:hover,
+body.dark .auth-btn:hover {
+    background: #4CAF50;
 }
 
 body.dark input,
