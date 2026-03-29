@@ -183,6 +183,33 @@ button:hover {
     margin-bottom: 16px;
 }
 
+/* ===== INTERVIEW BUTTONS ===== */
+.interview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.interview-btn {
+    display: block;
+    text-decoration: none;
+    background: #4A90E2;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.interview-btn:hover {
+    background: #357ABD;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
+}
+
 /* ===== INTERVIEW ===== */
 .interview-container {
     max-width: 800px;
@@ -257,8 +284,13 @@ body.dark textarea {
     border: 1px solid #555;
 }
 
-body.dark .navbar {
-    background: rgba(30,30,30,0.95);
+body.dark .interview-btn {
+    background: #5A9BD4;
+    box-shadow: 0 4px 12px rgba(90, 155, 212, 0.3);
+}
+
+body.dark .interview-btn:hover {
+    background: #4A8BC4;
 }
 
 /* ===== FOOTER ===== */
