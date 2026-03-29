@@ -20,9 +20,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(150), unique=True)
     name = db.Column(db.String(100))
     dob = db.Column(db.Date)
+    gender = db.Column(db.String(20))
     college = db.Column(db.String(200))
+    degree = db.Column(db.String(100))
+    branch = db.Column(db.String(100))
+    year_of_study = db.Column(db.String(50))
     profession = db.Column(db.String(100))
     profile_complete = db.Column(db.Boolean, default=False)
 
@@ -135,16 +140,26 @@ def profile_setup():
     
     if request.method == "POST":
         name = request.form.get("name")
+        email = request.form.get("email")
         dob = request.form.get("dob")
+        gender = request.form.get("gender")
         college = request.form.get("college")
+        degree = request.form.get("degree")
+        branch = request.form.get("branch")
+        year_of_study = request.form.get("year_of_study")
         profession = request.form.get("profession")
         
         # Update user profile
         user.name = name
+        user.email = email
         if dob:
             from datetime import datetime
             user.dob = datetime.strptime(dob, "%Y-%m-%d").date()
+        user.gender = gender
         user.college = college
+        user.degree = degree
+        user.branch = branch
+        user.year_of_study = year_of_study
         user.profession = profession
         user.profile_complete = True
         

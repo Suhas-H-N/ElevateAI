@@ -13,22 +13,41 @@
         <p class="subtitle">Help us personalize your interview experience</p>
 
         <!-- FORM -->
-        <form method="POST" class="auth-form">
+        <form method="POST" class="profile-form">
 
-            <input 
-                type="text" 
-                name="name" 
-                placeholder="Full Name" 
-                required
-                value="{{ user.name or '' }}"
-            >
+            <div class="form-row">
+                <input 
+                    type="text" 
+                    name="name" 
+                    placeholder="Full Name" 
+                    required
+                    value="{{ user.name or '' }}"
+                >
 
-            <input 
-                type="date" 
-                name="dob" 
-                placeholder="Date of Birth"
-                value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
-            >
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="Email Address" 
+                    value="{{ user.email or '' }}"
+                >
+            </div>
+
+            <div class="form-row">
+                <input 
+                    type="date" 
+                    name="dob" 
+                    placeholder="Date of Birth"
+                    value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
+                >
+
+                <select name="gender">
+                    <option value="">Select Gender (Optional)</option>
+                    <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+                    <option value="Prefer not to say" {% if user.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+                </select>
+            </div>
 
             <input 
                 type="text" 
@@ -37,12 +56,42 @@
                 value="{{ user.college or '' }}"
             >
 
-            <input 
-                type="text" 
-                name="profession" 
-                placeholder="Current Profession/Field" 
-                value="{{ user.profession or '' }}"
-            >
+            <div class="form-row">
+                <input 
+                    type="text" 
+                    name="degree" 
+                    placeholder="Degree (BTech, BCA, etc.)" 
+                    value="{{ user.degree or '' }}"
+                >
+
+                <input 
+                    type="text" 
+                    name="branch" 
+                    placeholder="Branch (CSE, ECE, etc.)" 
+                    value="{{ user.branch or '' }}"
+                >
+            </div>
+
+            <div class="form-row">
+                <select name="year_of_study">
+                    <option value="">Year of Study</option>
+                    <option value="1st Year" {% if user.year_of_study == '1st Year' %}selected{% endif %}>1st Year</option>
+                    <option value="2nd Year" {% if user.year_of_study == '2nd Year' %}selected{% endif %}>2nd Year</option>
+                    <option value="3rd Year" {% if user.year_of_study == '3rd Year' %}selected{% endif %}>3rd Year</option>
+                    <option value="4th Year" {% if user.year_of_study == '4th Year' %}selected{% endif %}>4th Year</option>
+                    <option value="Final Year" {% if user.year_of_study == 'Final Year' %}selected{% endif %}>Final Year</option>
+                    <option value="Completed" {% if user.year_of_study == 'Completed' %}selected{% endif %}>Completed</option>
+                </select>
+
+                <select name="profession">
+                    <option value="">Select Profession</option>
+                    <option value="Student" {% if user.profession == 'Student' %}selected{% endif %}>Student</option>
+                    <option value="Developer" {% if user.profession == 'Developer' %}selected{% endif %}>Developer</option>
+                    <option value="Fresher" {% if user.profession == 'Fresher' %}selected{% endif %}>Fresher</option>
+                    <option value="Working Professional" {% if user.profession == 'Working Professional' %}selected{% endif %}>Working Professional</option>
+                    <option value="Other" {% if user.profession == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
 
             <button type="submit" class="auth-btn">Complete Profile</button>
 

@@ -168,6 +168,24 @@ body {
     margin-bottom: 20px;
 }
 
+/* ===== PROFILE FORM ===== */
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-row input,
+.form-row select {
+    width: 100%;
+}
+
 /* ===== INPUTS ===== */
 input, textarea {
     width: 100%;
@@ -631,6 +649,17 @@ body.dark .auth-card h2 {
 
 body.dark .auth-card .subtitle {
     color: #ccc;
+}
+
+body.dark select {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
+body.dark select option {
+    background: #333;
+    color: white;
 }
 
 body.dark .logo-link {
