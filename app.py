@@ -20,6 +20,11 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    name = db.Column(db.String(100))
+    dob = db.Column(db.Date)
+    college = db.Column(db.String(200))
+    profession = db.Column(db.String(100))
+    profile_complete = db.Column(db.Boolean, default=False)
 
 # ---------------- INTERVIEW RESULT TABLE ----------------
 class InterviewResult(db.Model):
@@ -81,7 +86,12 @@ def login():
         if user and check_password_hash(user.password, password):
             session["user"] = username
             flash("Login successful!", "success")
-            return redirect(url_for("dashboard"))
+            
+            # Check if profile is complete
+            if not user.profile_complete:
+                return redirect(url_for("profile_setup"))
+            else:
+                return redirect(url_for("dashboard"))
         else:
             flash("Invalid username or password", "danger")
 
@@ -115,12 +125,43 @@ def signup():
 
     return render_template("signup.html")
 
+# ---------------- PROFILE SETUP ----------------
+@app.route("/profile_setup", methods=["GET", "POST"])
+def profile_setup():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(username=session["user"]).first()
+    
+    if request.method == "POST":
+        name = request.form.get("name")
+        dob = request.form.get("dob")
+        college = request.form.get("college")
+        profession = request.form.get("profession")
+        
+        # Update user profile
+        user.name = name
+        if dob:
+            from datetime import datetime
+            user.dob = datetime.strptime(dob, "%Y-%m-%d").date()
+        user.college = college
+        user.profession = profession
+        user.profile_complete = True
+        
+        db.session.commit()
+        
+        flash("Profile setup completed!", "success")
+        return redirect(url_for("dashboard"))
+    
+    return render_template("profile_setup.html", user=user)
+
 # ---------------- DASHBOARD ----------------
 @app.route("/dashboard")
 def dashboard():
     if "user" not in session:
         return redirect(url_for("login"))
 
+    user = User.query.filter_by(username=session["user"]).first()
     results = InterviewResult.query.filter_by(username=session["user"]).all()
 
     total_attempts = len(results)
@@ -129,6 +170,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         username=session["user"],
+        user=user,
         results=results,
         total_attempts=total_attempts,
         best_score=best_score

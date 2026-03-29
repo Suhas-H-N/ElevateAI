@@ -350,6 +350,22 @@ button:hover, .auth-btn:hover {
     text-decoration: underline;
 }
 
+/* ===== PROFILE INFO ===== */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
 /* ===== INTERVIEW BUTTONS ===== */
 .interview-grid {
     display: grid;
@@ -734,6 +750,10 @@ body.dark .bottom-text a {
 
 body.dark .bottom-text a:hover {
     color: #7AB3E6;
+}
+
+body.dark .profile-info .info-item {
+    border-bottom-color: rgba(255,255,255,0.1);
 }
 
 /* ===== FOOTER ===== */

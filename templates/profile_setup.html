@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Setup - Elevate AI{% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <!-- HEADER -->
+        <h2>Complete Your Profile 🚀</h2>
+        <p class="subtitle">Help us personalize your interview experience</p>
+
+        <!-- FORM -->
+        <form method="POST" class="auth-form">
+
+            <input 
+                type="text" 
+                name="name" 
+                placeholder="Full Name" 
+                required
+                value="{{ user.name or '' }}"
+            >
+
+            <input 
+                type="date" 
+                name="dob" 
+                placeholder="Date of Birth"
+                value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
+            >
+
+            <input 
+                type="text" 
+                name="college" 
+                placeholder="College/University" 
+                value="{{ user.college or '' }}"
+            >
+
+            <input 
+                type="text" 
+                name="profession" 
+                placeholder="Current Profession/Field" 
+                value="{{ user.profession or '' }}"
+            >
+
+            <button type="submit" class="auth-btn">Complete Profile</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

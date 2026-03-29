@@ -27,6 +27,33 @@
 
     </div>
 
+    <!-- ===== PROFILE INFO ===== -->
+    {% if user.name %}
+    <div class="card">
+        <h3>👤 Profile Information</h3>
+        <div class="profile-info">
+            <div class="info-item">
+                <strong>Name:</strong> {{ user.name }}
+            </div>
+            {% if user.dob %}
+            <div class="info-item">
+                <strong>Date of Birth:</strong> {{ user.dob.strftime('%d %b %Y') }}
+            </div>
+            {% endif %}
+            {% if user.college %}
+            <div class="info-item">
+                <strong>College/University:</strong> {{ user.college }}
+            </div>
+            {% endif %}
+            {% if user.profession %}
+            <div class="info-item">
+                <strong>Profession:</strong> {{ user.profession }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
     <!-- ===== HISTORY ===== -->
     <div class="card">
         <h3>📊 Interview History</h3>
