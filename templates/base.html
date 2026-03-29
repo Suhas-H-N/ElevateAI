@@ -16,16 +16,11 @@
 
         <!-- LEFT -->
         <div class="nav-left">
-            <a href="/dashboard" class="logo">🚀 Elevate AI</a>
+            <a href="/dashboard" class="logo-link">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="ElevateAI Logo" class="logo-img">
+                <span class="logo-text">Elevate AI</span>
+            </a>
         </div>
-        <div class="logo">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="ElevateAI Logo">
-            <span>ElevateAI</span>
-        </div>
-        <a href="/" class="logo">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-            <span>ElevateAI</span>
-        </a>
 
         <!-- RIGHT -->
         <div class="nav-right">

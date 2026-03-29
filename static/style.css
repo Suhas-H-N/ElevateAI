@@ -42,11 +42,32 @@ body {
     align-items: center;
 }
 
-.logo {
-    font-weight: 600;
-    font-size: 18px;
+/* ===== LOGO STYLING ===== */
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
     color: #2C3E50;
+    font-weight: 600;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.logo-link:hover {
+    color: #4A90E2;
+}
+
+.logo-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .nav-right {
@@ -596,6 +617,14 @@ body.dark .auth-card .subtitle {
     color: #ccc;
 }
 
+body.dark .logo-link {
+    color: #E0E0E0;
+}
+
+body.dark .logo-link:hover {
+    color: #5A9BD4;
+}
+
 body.dark button,
 body.dark .auth-btn {
     background: #66BB6A;
@@ -718,37 +747,5 @@ body.dark .bottom-text a:hover {
 body.dark .footer {
     color: #ccc;
 }
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
-.logo img {
-    width: 40px;
-    height: 40px;
-}
-
-.logo span {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-}
-
-.logo img {
-    width: 42px;
-    height: 42px;
-    border-radius: 8px;
-}
-
-.logo span {
-    font-size: 22px;
-    font-weight: 600;
-    color: #4CAF50;
-}
+/* ===== THEME BUTTON ===== */
