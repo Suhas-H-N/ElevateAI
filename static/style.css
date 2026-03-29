@@ -260,3 +260,15 @@ body.dark textarea {
 body.dark .navbar {
     background: rgba(30,30,30,0.95);
 }
+
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+body.dark .footer {
+    color: #ccc;
+}

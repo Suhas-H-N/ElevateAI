@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category | capitalize }} Interview Mode - Elevate AI{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="dashboard-header">
+        <h2>{{ category | capitalize }} Interview</h2>
+        <p class="subtitle">Choose your interview mode to get started</p>
+    </div>
+
+    <!-- ===== MODE SELECTION ===== -->
+    <div class="card">
+        <h3>🎯 Select Difficulty Level</h3>
+
+        <div class="interview-grid">
+            <a href="/interview?category={{ category }}&mode=easy" class="interview-btn">🟢 Easy</a>
+            <a href="/interview?category={{ category }}&mode=medium" class="interview-btn">🟡 Medium</a>
+            <a href="/interview?category={{ category }}&mode=hard" class="interview-btn">🔴 Hard</a>
+        </div>
+
+        <p class="note">Note: Difficulty levels are not yet implemented in the backend. All interviews use the same questions for now.</p>
+    </div>
+
+</div>
+
+{% endblock %}

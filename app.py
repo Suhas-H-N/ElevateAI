@@ -157,10 +157,12 @@ def interview():
         return redirect(url_for("login"))
 
     category = request.args.get("category")
+    mode = request.args.get("mode", "medium")
 
-    # Reset if new category
-    if category and session.get("category") != category:
+    # Reset if new category or mode
+    if category and (session.get("category") != category or session.get("mode") != mode):
         session["category"] = category
+        session["mode"] = mode
         session["q_index"] = 0
         session["answers"] = []
 
@@ -192,13 +194,16 @@ def interview():
 
         session.pop("q_index", None)
         session.pop("answers", None)
-        session.pop("category", None)
+        category = session.pop("category", None)
+        mode = session.pop("mode", None)
 
         return render_template(
             "result.html",
             score=score,
             total=len(questions),
-            feedback_list=feedback_list
+            feedback_list=feedback_list,
+            category=category,
+            mode=mode
         )
 
     question = questions[session["q_index"]]
