@@ -73,24 +73,48 @@
             </div>
 
             <div class="form-row">
-                <select name="year_of_study">
-                    <option value="">Year of Study</option>
-                    <option value="1st Year" {% if user.year_of_study == '1st Year' %}selected{% endif %}>1st Year</option>
-                    <option value="2nd Year" {% if user.year_of_study == '2nd Year' %}selected{% endif %}>2nd Year</option>
-                    <option value="3rd Year" {% if user.year_of_study == '3rd Year' %}selected{% endif %}>3rd Year</option>
-                    <option value="4th Year" {% if user.year_of_study == '4th Year' %}selected{% endif %}>4th Year</option>
-                    <option value="Final Year" {% if user.year_of_study == 'Final Year' %}selected{% endif %}>Final Year</option>
-                    <option value="Completed" {% if user.year_of_study == 'Completed' %}selected{% endif %}>Completed</option>
-                </select>
+                <div class="button-group">
+                    <label>Year of Study</label>
+                    <div class="radio-buttons">
+                        <input type="radio" id="year1" name="year_of_study" value="1st Year" {% if user.year_of_study == '1st Year' %}checked{% endif %}>
+                        <label for="year1" class="radio-btn">1st Year</label>
+                        
+                        <input type="radio" id="year2" name="year_of_study" value="2nd Year" {% if user.year_of_study == '2nd Year' %}checked{% endif %}>
+                        <label for="year2" class="radio-btn">2nd Year</label>
+                        
+                        <input type="radio" id="year3" name="year_of_study" value="3rd Year" {% if user.year_of_study == '3rd Year' %}checked{% endif %}>
+                        <label for="year3" class="radio-btn">3rd Year</label>
+                        
+                        <input type="radio" id="year4" name="year_of_study" value="4th Year" {% if user.year_of_study == '4th Year' %}checked{% endif %}>
+                        <label for="year4" class="radio-btn">4th Year</label>
+                        
+                        <input type="radio" id="year5" name="year_of_study" value="Final Year" {% if user.year_of_study == 'Final Year' %}checked{% endif %}>
+                        <label for="year5" class="radio-btn">Final Year</label>
+                        
+                        <input type="radio" id="year6" name="year_of_study" value="Completed" {% if user.year_of_study == 'Completed' %}checked{% endif %}>
+                        <label for="year6" class="radio-btn">Completed</label>
+                    </div>
+                </div>
 
-                <select name="profession">
-                    <option value="">Select Profession</option>
-                    <option value="Student" {% if user.profession == 'Student' %}selected{% endif %}>Student</option>
-                    <option value="Developer" {% if user.profession == 'Developer' %}selected{% endif %}>Developer</option>
-                    <option value="Fresher" {% if user.profession == 'Fresher' %}selected{% endif %}>Fresher</option>
-                    <option value="Working Professional" {% if user.profession == 'Working Professional' %}selected{% endif %}>Working Professional</option>
-                    <option value="Other" {% if user.profession == 'Other' %}selected{% endif %}>Other</option>
-                </select>
+                <div class="button-group">
+                    <label>Select Profession</label>
+                    <div class="radio-buttons">
+                        <input type="radio" id="prof1" name="profession" value="Student" {% if user.profession == 'Student' %}checked{% endif %}>
+                        <label for="prof1" class="radio-btn">Student</label>
+                        
+                        <input type="radio" id="prof2" name="profession" value="Developer" {% if user.profession == 'Developer' %}checked{% endif %}>
+                        <label for="prof2" class="radio-btn">Developer</label>
+                        
+                        <input type="radio" id="prof3" name="profession" value="Fresher" {% if user.profession == 'Fresher' %}checked{% endif %}>
+                        <label for="prof3" class="radio-btn">Fresher</label>
+                        
+                        <input type="radio" id="prof4" name="profession" value="Working Professional" {% if user.profession == 'Working Professional' %}checked{% endif %}>
+                        <label for="prof4" class="radio-btn">Working Professional</label>
+                        
+                        <input type="radio" id="prof5" name="profession" value="Other" {% if user.profession == 'Other' %}checked{% endif %}>
+                        <label for="prof5" class="radio-btn">Other</label>
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="auth-btn">Complete Profile</button>

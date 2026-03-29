@@ -186,6 +186,58 @@ body {
     width: 100%;
 }
 
+/* ===== BUTTON GROUP STYLING ===== */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.button-group label {
+    font-weight: 600;
+    color: #2C3E50;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.radio-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.radio-buttons input[type="radio"] {
+    display: none;
+}
+
+.radio-btn {
+    padding: 10px 16px;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    color: #495057;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    flex: 1;
+    min-width: 100px;
+}
+
+.radio-btn:hover {
+    background: #e9ecef;
+    border-color: #4A90E2;
+    color: #4A90E2;
+}
+
+.radio-buttons input[type="radio"]:checked + .radio-btn {
+    background: #4A90E2;
+    border-color: #4A90E2;
+    color: white;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
 /* ===== INPUTS ===== */
 input, textarea {
     width: 100%;
