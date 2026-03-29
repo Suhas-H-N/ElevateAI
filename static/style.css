@@ -118,6 +118,18 @@ body {
     text-align: center;
 }
 
+.auth-card h2 {
+    margin-bottom: 12px;
+    font-size: 24px;
+    color: #2C3E50;
+}
+
+.auth-card .subtitle {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
 /* ===== INPUTS ===== */
 input, textarea {
     width: 100%;
@@ -158,6 +170,10 @@ button, .auth-btn {
 
 button:hover, .auth-btn:hover {
     background: #45a049;
+}
+
+.login-btn, .signup-btn {
+    margin-top: 20px;
 }
 
 /* ===== DASHBOARD ===== */
@@ -542,6 +558,14 @@ body.dark .auth-card,
 body.dark .interview-card,
 body.dark .result-card {
     background: rgba(40,40,40,0.95);
+}
+
+body.dark .auth-card h2 {
+    color: #E0E0E0;
+}
+
+body.dark .auth-card .subtitle {
+    color: #ccc;
 }
 
 body.dark button,
