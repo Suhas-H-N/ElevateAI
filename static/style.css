@@ -148,7 +148,7 @@ body {
 
 .auth-card {
     width: 100%;
-    max-width: 380px;
+    max-width: 480px;
     background: rgba(255,255,255,0.95);
     padding: 30px;
     border-radius: 14px;
@@ -181,8 +181,16 @@ body {
     gap: 12px;
 }
 
+.form-row-three {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
 .form-row input,
-.form-row select {
+.form-row select,
+.form-row-three input,
+.form-row-three select {
     width: 100%;
 }
 
@@ -231,8 +239,9 @@ body {
 .radio-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     margin-top: 8px;
+    justify-content: center;
 }
 
 .radio-buttons input[type="radio"] {
@@ -240,18 +249,18 @@ body {
 }
 
 .radio-btn {
-    padding: 10px 16px;
+    padding: 8px 12px;
     background: #f8f9fa;
     border: 2px solid #e9ecef;
     border-radius: 8px;
     color: #495057;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
-    flex: 1;
-    min-width: 100px;
+    flex: 0 0 auto;
+    min-width: 80px;
 }
 
 .radio-btn:hover {
