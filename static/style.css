@@ -318,6 +318,17 @@ button:hover, .auth-btn:hover {
     border-top: 1px solid #eee;
 }
 
+.bottom-text a {
+    color: #4A90E2;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.bottom-text a:hover {
+    color: #357ABD;
+    text-decoration: underline;
+}
+
 /* ===== INTERVIEW BUTTONS ===== */
 .interview-grid {
     display: grid;
@@ -686,6 +697,14 @@ body.dark .empty-text {
 body.dark .bottom-text {
     color: #ccc;
     border-top-color: #555;
+}
+
+body.dark .bottom-text a {
+    color: #5A9BD4;
+}
+
+body.dark .bottom-text a:hover {
+    color: #7AB3E6;
 }
 
 /* ===== FOOTER ===== */
