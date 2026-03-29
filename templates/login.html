@@ -9,38 +9,60 @@
     <div class="auth-card">
 
         <!-- HEADER -->
-        <h2>Welcome Back 👋</h2>
-        <p class="subtitle">Login to continue your AI interview journey</p>
+        <div class="auth-header">
+            <div class="header-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="9,9 15,15 9,15 9,9"></polyline>
+                    <line x1="9" y1="9" x2="9" y2="15"></line>
+                </svg>
+            </div>
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Login to continue your AI interview journey</p>
+        </div>
 
         <!-- FORM -->
         <form method="POST" class="auth-form">
 
-            <input 
-                type="text" 
-                name="username" 
-                placeholder="Enter username" 
-                required
-            >
-
-            <div class="password-wrapper">
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    placeholder="Enter password" 
-                    required
-                >
-                <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        placeholder="Enter your username" 
+                        required
+                    >
+                </div>
             </div>
 
-            <button type="submit" class="auth-btn login-btn">Login</button>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password" 
+                            required
+                        >
+                        <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn login-btn">
+                <span class="btn-icon">🚀</span>
+                Login to Your Account
+            </button>
 
         </form>
 
         <!-- FOOTER -->
         <p class="bottom-text">
             Don’t have an account?
-            <a href="/signup">Create one</a>
+            <a href="/signup">Create one here</a>
         </p>
 
     </div>
