@@ -67,6 +67,16 @@ body {
     background: rgba(0,0,0,0.08);
 }
 
+.logout-btn {
+    color: #dc3545 !important;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: #b02a37 !important;
+}
+
 /* ===== THEME BUTTON ===== */
 .theme-toggle {
     background: none;
@@ -97,7 +107,14 @@ body {
     font-size: 16px; 
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
-.flash.danger { background: #F8D7DA; color: #721C24; }
+.flash.danger { 
+    background: #F8D7DA; 
+    color: #721C24; 
+    border: 2px solid #dc3545; 
+    font-weight: bold; 
+    font-size: 16px; 
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
 .flash.warning { background: #FFF3CD; color: #856404; }
 .flash.info { background: #D1ECF1; color: #0C5460; }
 
@@ -576,6 +593,22 @@ body.dark .auth-btn {
 body.dark button:hover,
 body.dark .auth-btn:hover {
     background: #4CAF50;
+}
+
+body.dark .logout-btn {
+    color: #ff6b7a !important;
+}
+
+body.dark .logout-btn:hover {
+    background: rgba(255, 107, 122, 0.1);
+    color: #e05564 !important;
+}
+
+body.dark .flash.danger {
+    background: #2d1b1e;
+    color: #ff6b7a;
+    border-color: #dc3545;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
 }
 
 body.dark input,

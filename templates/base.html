@@ -23,7 +23,7 @@
         <div class="nav-right">
             {% if session.get("user") %}
                 <a href="/dashboard">Dashboard</a>
-                <a href="/logout">Logout</a>
+                <a href="/logout" class="logout-btn">Logout</a>
             {% endif %}
 
             <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
