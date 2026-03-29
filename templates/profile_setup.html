@@ -4,130 +4,203 @@
 
 {% block content %}
 
-<div class="auth-container">
+<div class="profile-container">
 
-    <div class="auth-card">
+    <div class="profile-card">
 
         <!-- HEADER -->
-        <h2>Complete Your Profile 🚀</h2>
-        <p class="subtitle">Help us personalize your interview experience</p>
+        <div class="profile-header">
+            <div class="header-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <h1>Complete Your Profile</h1>
+            <p class="header-subtitle">Help us personalize your interview experience with just a few details</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
 
         <!-- FORM -->
         <form method="POST" class="profile-form">
 
             <!-- ROW 1: Name and Email -->
-            <div class="form-row">
-                <input 
-                    type="text" 
-                    name="name" 
-                    placeholder="Full Name" 
-                    required
-                    value="{{ user.name or '' }}"
-                >
+            <div class="form-section">
+                <h3 class="section-title">👤 Personal Information</h3>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">Full Name</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                placeholder="Enter your full name" 
+                                required
+                                value="{{ user.name or '' }}"
+                            >
+                        </div>
+                    </div>
 
-                <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="Email Address" 
-                    value="{{ user.email or '' }}"
-                >
+                    <div class="input-group">
+                        <label class="input-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📧</span>
+                            <input 
+                                type="email" 
+                                name="email" 
+                                placeholder="Enter your email" 
+                                value="{{ user.email or '' }}"
+                            >
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ROW 2: DOB, Gender, College -->
-            <div class="form-row-three">
-                <input 
-                    type="date" 
-                    name="dob" 
-                    placeholder="Date of Birth"
-                    value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
-                >
+            <div class="form-section">
+                <h3 class="section-title">📅 Additional Details</h3>
+                <div class="form-row-three">
+                    <div class="input-group">
+                        <label class="input-label">Date of Birth</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📅</span>
+                            <input 
+                                type="date" 
+                                name="dob" 
+                                value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
+                            >
+                        </div>
+                    </div>
 
-                <select name="gender">
-                    <option value="">Select Gender (Optional)</option>
-                    <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
-                    <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
-                    <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
-                    <option value="Prefer not to say" {% if user.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
-                </select>
+                    <div class="input-group">
+                        <label class="input-label">Gender</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">⚧</span>
+                            <select name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+                                <option value="Prefer not to say" {% if user.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <input 
-                    type="text" 
-                    name="college" 
-                    placeholder="College/University" 
-                    value="{{ user.college or '' }}"
-                >
+                    <div class="input-group">
+                        <label class="input-label">College/University</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🎓</span>
+                            <input 
+                                type="text" 
+                                name="college" 
+                                placeholder="Enter your college" 
+                                value="{{ user.college or '' }}"
+                            >
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ROW 3: Degree and Branch -->
-            <div class="form-row">
-                <input 
-                    type="text" 
-                    name="degree" 
-                    placeholder="Degree (BTech, BCA, etc.)" 
-                    value="{{ user.degree or '' }}"
-                >
+            <div class="form-section">
+                <h3 class="section-title">📚 Academic Information</h3>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">Degree</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🎓</span>
+                            <input 
+                                type="text" 
+                                name="degree" 
+                                placeholder="e.g., BTech, BCA, BSc" 
+                                value="{{ user.degree or '' }}"
+                            >
+                        </div>
+                    </div>
 
-                <input 
-                    type="text" 
-                    name="branch" 
-                    placeholder="Branch (CSE, ECE, etc.)" 
-                    value="{{ user.branch or '' }}"
-                >
+                    <div class="input-group">
+                        <label class="input-label">Branch/Specialization</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔬</span>
+                            <input 
+                                type="text" 
+                                name="branch" 
+                                placeholder="e.g., CSE, ECE, Mechanical" 
+                                value="{{ user.branch or '' }}"
+                            >
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ROW 4: Year of Study and Profession -->
-            <div class="form-row">
-                <div class="button-group">
-                    <button type="button" class="toggle-btn" onclick="toggleOptions('year-options')">
-                        Year of Study {{ user.year_of_study or 'Select' }}
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="year-options" class="radio-buttons" style="display: none;">
-                        <input type="radio" id="year1" name="year_of_study" value="1st Year" {% if user.year_of_study == '1st Year' %}checked{% endif %}>
-                        <label for="year1" class="radio-btn">1st Year</label>
-                        
-                        <input type="radio" id="year2" name="year_of_study" value="2nd Year" {% if user.year_of_study == '2nd Year' %}checked{% endif %}>
-                        <label for="year2" class="radio-btn">2nd Year</label>
-                        
-                        <input type="radio" id="year3" name="year_of_study" value="3rd Year" {% if user.year_of_study == '3rd Year' %}checked{% endif %}>
-                        <label for="year3" class="radio-btn">3rd Year</label>
-                        
-                        <input type="radio" id="year4" name="year_of_study" value="4th Year" {% if user.year_of_study == '4th Year' %}checked{% endif %}>
-                        <label for="year4" class="radio-btn">4th Year</label>
-                        
-                        <input type="radio" id="year5" name="year_of_study" value="Final Year" {% if user.year_of_study == 'Final Year' %}checked{% endif %}>
-                        <label for="year5" class="radio-btn">Final Year</label>
-                        
-                        <input type="radio" id="year6" name="year_of_study" value="Completed" {% if user.year_of_study == 'Completed' %}checked{% endif %}>
-                        <label for="year6" class="radio-btn">Completed</label>
+            <div class="form-section">
+                <h3 class="section-title">💼 Professional Details</h3>
+                <div class="form-row">
+                    <div class="button-group">
+                        <label class="input-label">Year of Study</label>
+                        <button type="button" class="toggle-btn" onclick="toggleOptions('year-options')">
+                            <span class="btn-icon">📚</span>
+                            <span class="btn-text">{{ user.year_of_study or 'Select Year' }}</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div id="year-options" class="radio-buttons" style="display: none;">
+                            <input type="radio" id="year1" name="year_of_study" value="1st Year" {% if user.year_of_study == '1st Year' %}checked{% endif %}>
+                            <label for="year1" class="radio-btn">1st Year</label>
+                            
+                            <input type="radio" id="year2" name="year_of_study" value="2nd Year" {% if user.year_of_study == '2nd Year' %}checked{% endif %}>
+                            <label for="year2" class="radio-btn">2nd Year</label>
+                            
+                            <input type="radio" id="year3" name="year_of_study" value="3rd Year" {% if user.year_of_study == '3rd Year' %}checked{% endif %}>
+                            <label for="year3" class="radio-btn">3rd Year</label>
+                            
+                            <input type="radio" id="year4" name="year_of_study" value="4th Year" {% if user.year_of_study == '4th Year' %}checked{% endif %}>
+                            <label for="year4" class="radio-btn">4th Year</label>
+                            
+                            <input type="radio" id="year5" name="year_of_study" value="Final Year" {% if user.year_of_study == 'Final Year' %}checked{% endif %}>
+                            <label for="year5" class="radio-btn">Final Year</label>
+                            
+                            <input type="radio" id="year6" name="year_of_study" value="Completed" {% if user.year_of_study == 'Completed' %}checked{% endif %}>
+                            <label for="year6" class="radio-btn">Completed</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="button-group">
-                    <button type="button" class="toggle-btn" onclick="toggleOptions('profession-options')">
-                        Profession {{ user.profession or 'Select' }}
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="profession-options" class="radio-buttons" style="display: none;">
-                        <input type="radio" id="prof1" name="profession" value="Student" {% if user.profession == 'Student' %}checked{% endif %}>
-                        <label for="prof1" class="radio-btn">Student</label>
-                        
-                        <input type="radio" id="prof2" name="profession" value="Developer" {% if user.profession == 'Developer' %}checked{% endif %}>
-                        <label for="prof2" class="radio-btn">Developer</label>
-                        
-                        <input type="radio" id="prof3" name="profession" value="Fresher" {% if user.profession == 'Fresher' %}checked{% endif %}>
-                        <label for="prof3" class="radio-btn">Fresher</label>
-                        
-                        <input type="radio" id="prof4" name="profession" value="Working Professional" {% if user.profession == 'Working Professional' %}checked{% endif %}>
-                        <label for="prof4" class="radio-btn">Working Professional</label>
-                        
-                        <input type="radio" id="prof5" name="profession" value="Other" {% if user.profession == 'Other' %}checked{% endif %}>
-                        <label for="prof5" class="radio-btn">Other</label>
+                    <div class="button-group">
+                        <label class="input-label">Profession</label>
+                        <button type="button" class="toggle-btn" onclick="toggleOptions('profession-options')">
+                            <span class="btn-icon">💼</span>
+                            <span class="btn-text">{{ user.profession or 'Select Profession' }}</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div id="profession-options" class="radio-buttons" style="display: none;">
+                            <input type="radio" id="prof1" name="profession" value="Student" {% if user.profession == 'Student' %}checked{% endif %}>
+                            <label for="prof1" class="radio-btn">Student</label>
+                            
+                            <input type="radio" id="prof2" name="profession" value="Developer" {% if user.profession == 'Developer' %}checked{% endif %}>
+                            <label for="prof2" class="radio-btn">Developer</label>
+                            
+                            <input type="radio" id="prof3" name="profession" value="Fresher" {% if user.profession == 'Fresher' %}checked{% endif %}>
+                            <label for="prof3" class="radio-btn">Fresher</label>
+                            
+                            <input type="radio" id="prof4" name="profession" value="Working Professional" {% if user.profession == 'Working Professional' %}checked{% endif %}>
+                            <label for="prof4" class="radio-btn">Working Professional</label>
+                            
+                            <input type="radio" id="prof5" name="profession" value="Other" {% if user.profession == 'Other' %}checked{% endif %}>
+                            <label for="prof5" class="radio-btn">Other</label>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="auth-btn">Complete Profile</button>
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    <span class="btn-icon">🚀</span>
+                    Complete Profile
+                </button>
+            </div>
 
         </form>
 
