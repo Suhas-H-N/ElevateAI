@@ -89,7 +89,14 @@ body {
     font-size: 14px;
 }
 
-.flash.success { background: #E8F5E8; color: #2E7D32; border: 1px solid #4CAF50; }
+.flash.success { 
+    background: #E8F5E8; 
+    color: #2E7D32; 
+    border: 2px solid #4CAF50; 
+    font-weight: bold; 
+    font-size: 16px; 
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
 .flash.danger { background: #F8D7DA; color: #721C24; }
 .flash.warning { background: #FFF3CD; color: #856404; }
 .flash.info { background: #D1ECF1; color: #0C5460; }
@@ -579,6 +586,13 @@ body.dark .result-actions a {
 
 body.dark .result-actions a:hover {
     background: #4A8BC4;
+}
+
+body.dark .flash.success {
+    background: #1B5E20;
+    color: #81C784;
+    border-color: #4CAF50;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.5);
 }
 
 /* ===== FOOTER ===== */
