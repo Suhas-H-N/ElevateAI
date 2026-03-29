@@ -276,6 +276,15 @@ button:hover, .auth-btn:hover {
     margin-top: 16px;
 }
 
+.bottom-text {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
 /* ===== INTERVIEW BUTTONS ===== */
 .interview-grid {
     display: grid;
@@ -615,6 +624,11 @@ body.dark .empty-text {
     color: #E0E0E0;
     background: rgba(90, 155, 212, 0.15);
     border-color: rgba(90, 155, 212, 0.3);
+}
+
+body.dark .bottom-text {
+    color: #ccc;
+    border-top-color: #555;
 }
 
 /* ===== FOOTER ===== */
