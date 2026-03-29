@@ -74,8 +74,11 @@
 
             <div class="form-row">
                 <div class="button-group">
-                    <label>Year of Study</label>
-                    <div class="radio-buttons">
+                    <button type="button" class="toggle-btn" onclick="toggleOptions('year-options')">
+                        Year of Study {{ user.year_of_study or 'Select' }}
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div id="year-options" class="radio-buttons" style="display: none;">
                         <input type="radio" id="year1" name="year_of_study" value="1st Year" {% if user.year_of_study == '1st Year' %}checked{% endif %}>
                         <label for="year1" class="radio-btn">1st Year</label>
                         
@@ -97,8 +100,11 @@
                 </div>
 
                 <div class="button-group">
-                    <label>Select Profession</label>
-                    <div class="radio-buttons">
+                    <button type="button" class="toggle-btn" onclick="toggleOptions('profession-options')">
+                        Profession {{ user.profession or 'Select' }}
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div id="profession-options" class="radio-buttons" style="display: none;">
                         <input type="radio" id="prof1" name="profession" value="Student" {% if user.profession == 'Student' %}checked{% endif %}>
                         <label for="prof1" class="radio-btn">Student</label>
                         
@@ -124,5 +130,36 @@
     </div>
 
 </div>
+
+<!-- TOGGLE OPTIONS SCRIPT -->
+<script>
+function toggleOptions(optionsId) {
+    const options = document.getElementById(optionsId);
+    const button = options.previousElementSibling;
+    const arrow = button.querySelector('.arrow');
+    
+    if (options.style.display === 'none' || options.style.display === '') {
+        options.style.display = 'flex';
+        arrow.textContent = '▲';
+    } else {
+        options.style.display = 'none';
+        arrow.textContent = '▼';
+    }
+}
+
+// Update button text when radio button is selected
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const buttonGroup = this.closest('.button-group');
+        const toggleBtn = buttonGroup.querySelector('.toggle-btn');
+        const selectedLabel = buttonGroup.querySelector(`label[for="${this.id}"]`);
+        
+        if (selectedLabel) {
+            const fieldName = this.name === 'year_of_study' ? 'Year of Study' : 'Profession';
+            toggleBtn.innerHTML = `${fieldName} ${selectedLabel.textContent} <span class="arrow">▼</span>`;
+        }
+    });
+});
+</script>
 
 {% endblock %}
