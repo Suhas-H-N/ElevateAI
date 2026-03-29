@@ -733,3 +733,22 @@ body.dark .footer {
     font-size: 20px;
     font-weight: bold;
 }
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+.logo img {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+}
+
+.logo span {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4CAF50;
+}
