@@ -213,3 +213,67 @@ select:focus {
     70% { box-shadow: 0 0 0 10px rgba(74, 144, 226, 0); }
     100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0); }
 }
+
+/* ===== RESULT PAGE UPGRADE ===== */
+
+.animate-score {
+    animation: popIn 0.6s ease;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.score-total {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* FEEDBACK ANIMATION */
+.feedback-list li {
+    animation: fadeUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.feedback-list li:nth-child(1) { animation-delay: 0.1s; }
+.feedback-list li:nth-child(2) { animation-delay: 0.2s; }
+.feedback-list li:nth-child(3) { animation-delay: 0.3s; }
+.feedback-list li:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ACTION BUTTONS */
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.dashboard-btn {
+    background: #4A90E2;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.retry-btn {
+    background: #6C5CE7;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.dashboard-btn:hover,
+.retry-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}

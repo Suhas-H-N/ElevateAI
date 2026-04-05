@@ -11,16 +11,19 @@
         <!-- HEADER -->
         <div class="result-header">
             <h2>🎉 Interview Completed!</h2>
-            <p class="subtitle">Here’s your performance summary for {{ category | capitalize }} - {{ mode | capitalize }}</p>
+            <p class="subtitle">
+                {{ category | capitalize }} • {{ mode | capitalize }}
+            </p>
         </div>
 
         <!-- SCORE -->
-        <div class="score-box">
+        <div class="score-box animate-score">
             <span>Your Score</span>
-            <h1>{{ score }} / {{ total }}</h1>
+            <h1 id="scoreDisplay">0</h1>
+            <p class="score-total">out of {{ total }}</p>
         </div>
 
-        <!-- PERFORMANCE MESSAGE -->
+        <!-- PERFORMANCE -->
         <div class="performance-msg">
             {% if score == total %}
                 <p class="excellent">🔥 Excellent! Perfect score!</p>
@@ -38,7 +41,7 @@
             {% if feedback_list %}
                 <ul class="feedback-list">
                     {% for f in feedback_list %}
-                        <li>✔ {{ f }}</li>
+                        <li class="fade-in">✔ {{ f }}</li>
                     {% endfor %}
                 </ul>
             {% else %}
@@ -46,13 +49,31 @@
             {% endif %}
         </div>
 
-        <!-- ACTION BUTTON -->
+        <!-- ACTIONS -->
         <div class="result-actions">
-            <a href="/dashboard" class="dashboard-btn">← Back to Dashboard</a>
+            <a href="/dashboard" class="dashboard-btn">← Dashboard</a>
+            <a href="/mode?category={{ category }}" class="retry-btn">🔁 Retry</a>
         </div>
 
     </div>
 
 </div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+// Animated score counter
+let score = {{ score }};
+let total = {{ total }};
+let current = 0;
+
+let interval = setInterval(() => {
+    if (current >= score) {
+        clearInterval(interval);
+    } else {
+        current++;
+        document.getElementById("scoreDisplay").innerText = current + " / " + total;
+    }
+}, 50);
+</script>
 
 {% endblock %}
