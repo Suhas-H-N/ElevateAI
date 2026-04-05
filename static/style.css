@@ -277,3 +277,8 @@ select:focus {
     transform: translateY(-2px);
     opacity: 0.9;
 }
+
+canvas {
+    margin-top: 20px;
+    max-height: 300px;
+}

@@ -179,18 +179,26 @@ def profile_setup():
 @login_required
 def dashboard():
     user = User.query.filter_by(username=session["user"]).first()
-    results = InterviewResult.query.filter_by(username=session["user"]).all()
+    results = InterviewResult.query.filter_by(username=session["user"]).order_by(InterviewResult.date).all()
+
+    # Graph Data
+    dates = [r.date.strftime("%d %b") for r in results]
+    scores = [r.score for r in results]
+    totals = [r.total for r in results]
 
     total_attempts = len(results)
     best_score = max([r.score for r in results], default=0)
 
     return render_template(
-        "dashboard.html",
-        username=session["user"],
-        user=user,
-        results=results,
-        total_attempts=total_attempts,
-        best_score=best_score
+    "dashboard.html",
+    username=session["user"],
+    user=user,
+    results=results,
+    total_attempts=total_attempts,
+    best_score=best_score,
+    dates=dates,
+    scores=scores,
+    totals=totals
     )
 
 # ---------------- MODE ----------------

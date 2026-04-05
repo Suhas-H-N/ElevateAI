@@ -27,6 +27,16 @@
 
     </div>
 
+    <div class="card">
+    <h3>📈 Performance Analytics</h3>
+
+    {% if scores %}
+        <canvas id="scoreChart"></canvas>
+    {% else %}
+        <p class="empty-text">No data to display yet.</p>
+    {% endif %}
+    </div>
+
     <!-- ===== PROFILE ===== -->
     {% if user.name %}
     <div class="card profile-card">
@@ -100,3 +110,38 @@ function toggleFullscreen() {
 </script>
 
 {% endblock %}
+
+<script>
+const ctx = document.getElementById('scoreChart');
+
+if (ctx) {
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ dates | tojson }},
+            datasets: [{
+                label: 'Score',
+                data: {{ scores | tojson }},
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
