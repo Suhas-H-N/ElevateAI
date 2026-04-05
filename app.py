@@ -2,18 +2,29 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from functools import wraps
 import os
 
 app = Flask(__name__)
 
-# ✅ FIXED SECRET KEY (important for sessions)
-app.secret_key = "supersecretkey123"  # change later for production
+# 🔐 SECRET KEY (use env variable in production)
+app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 # ---------------- DATABASE CONFIG ----------------
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
+# ---------------- LOGIN REQUIRED DECORATOR ----------------
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user" not in session:
+            flash("Please login first", "warning")
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # ---------------- USER TABLE ----------------
 class User(db.Model):
@@ -40,7 +51,7 @@ class InterviewResult(db.Model):
     total = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
-# ---------------- AI FEEDBACK FUNCTION ----------------
+# ---------------- AI FEEDBACK ----------------
 def generate_feedback(answers):
     feedback = []
     for ans in answers:
@@ -83,20 +94,22 @@ question_bank = {
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+
+        if not username or not password:
+            flash("All fields are required", "warning")
+            return redirect(url_for("login"))
 
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
             session["user"] = username
             flash("Login successful!", "success")
-            
-            # Check if profile is complete
+
             if not user.profile_complete:
                 return redirect(url_for("profile_setup"))
-            else:
-                return redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard"))
         else:
             flash("Invalid username or password", "danger")
 
@@ -106,16 +119,18 @@ def login():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+
+        if not username or not password:
+            flash("All fields are required", "warning")
+            return redirect(url_for("signup"))
 
         if len(password) < 5:
             flash("Password must be at least 5 characters", "warning")
             return redirect(url_for("signup"))
 
-        existing_user = User.query.filter_by(username=username).first()
-
-        if existing_user:
+        if User.query.filter_by(username=username).first():
             flash("Username already exists", "danger")
             return redirect(url_for("signup"))
 
@@ -132,50 +147,37 @@ def signup():
 
 # ---------------- PROFILE SETUP ----------------
 @app.route("/profile_setup", methods=["GET", "POST"])
+@login_required
 def profile_setup():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
     user = User.query.filter_by(username=session["user"]).first()
-    
+
     if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
+        user.name = request.form.get("name")
+        user.email = request.form.get("email")
+
         dob = request.form.get("dob")
-        gender = request.form.get("gender")
-        college = request.form.get("college")
-        degree = request.form.get("degree")
-        branch = request.form.get("branch")
-        year_of_study = request.form.get("year_of_study")
-        profession = request.form.get("profession")
-        
-        # Update user profile
-        user.name = name
-        user.email = email
         if dob:
-            from datetime import datetime
             user.dob = datetime.strptime(dob, "%Y-%m-%d").date()
-        user.gender = gender
-        user.college = college
-        user.degree = degree
-        user.branch = branch
-        user.year_of_study = year_of_study
-        user.profession = profession
+
+        user.gender = request.form.get("gender")
+        user.college = request.form.get("college")
+        user.degree = request.form.get("degree")
+        user.branch = request.form.get("branch")
+        user.year_of_study = request.form.get("year_of_study")
+        user.profession = request.form.get("profession")
         user.profile_complete = True
-        
+
         db.session.commit()
-        
-        flash("Profile setup completed!", "success")
+
+        flash("Profile completed!", "success")
         return redirect(url_for("dashboard"))
-    
+
     return render_template("profile_setup.html", user=user)
 
 # ---------------- DASHBOARD ----------------
 @app.route("/dashboard")
+@login_required
 def dashboard():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
     user = User.query.filter_by(username=session["user"]).first()
     results = InterviewResult.query.filter_by(username=session["user"]).all()
 
@@ -193,15 +195,19 @@ def dashboard():
 
 # ---------------- MODE ----------------
 @app.route("/mode")
+@login_required
 def mode():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
     category = request.args.get("category")
+
+    if category not in question_bank:
+        flash("Invalid category selected", "danger")
+        return redirect(url_for("dashboard"))
+
     return render_template("mode.html", category=category)
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
+@login_required
 def logout():
     session.clear()
     flash("Logged out successfully", "info")
@@ -209,14 +215,11 @@ def logout():
 
 # ---------------- INTERVIEW ----------------
 @app.route("/interview", methods=["GET", "POST"])
+@login_required
 def interview():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
     category = request.args.get("category")
     mode = request.args.get("mode", "medium")
 
-    # Reset if new category or mode
     if category and (session.get("category") != category or session.get("mode") != mode):
         session["category"] = category
         session["mode"] = mode
@@ -226,14 +229,13 @@ def interview():
     if "category" not in session:
         return redirect(url_for("dashboard"))
 
-    questions = question_bank[session["category"]]
+    questions = question_bank.get(session["category"], [])
 
     if request.method == "POST":
         answer = request.form.get("answer", "").strip()
         session["answers"].append(answer)
         session["q_index"] += 1
 
-    # Finish interview
     if session["q_index"] >= len(questions):
         answers = session["answers"]
 
@@ -249,18 +251,13 @@ def interview():
         db.session.add(result)
         db.session.commit()
 
-        session.pop("q_index", None)
-        session.pop("answers", None)
-        category = session.pop("category", None)
-        mode = session.pop("mode", None)
+        session.clear()
 
         return render_template(
             "result.html",
             score=score,
             total=len(questions),
-            feedback_list=feedback_list,
-            category=category,
-            mode=mode
+            feedback_list=feedback_list
         )
 
     question = questions[session["q_index"]]
