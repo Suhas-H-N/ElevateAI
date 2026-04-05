@@ -14,15 +14,18 @@
             <p class="question-progress">
                 Question {{ current }} of {{ total }}
             </p>
+
+            <!-- TIMER -->
+            <p class="timer">⏱ Time: <span id="time">00:00</span></p>
         </div>
 
-        <!-- PROGRESS BAR -->
+        <!-- PROGRESS -->
         <div class="progress-bar">
             <div class="progress-fill" style="width: {{ (current / total) * 100 }}%;"></div>
         </div>
 
         <!-- QUESTION -->
-        <div class="question-box">
+        <div class="question-box fade-in">
             {{ question }}
         </div>
 
@@ -31,14 +34,18 @@
 
             <textarea 
                 name="answer" 
+                id="answerBox"
                 rows="5" 
-                placeholder="Type your answer here..." 
+                placeholder="Start typing your answer..." 
                 required>
             </textarea>
 
+            <!-- WORD COUNT -->
+            <p class="word-count">Words: <span id="wordCount">0</span></p>
+
             <div class="button-group">
                 <a href="/dashboard" class="back-btn">← Exit</a>
-                <button type="submit" class="next-btn">Next →</button>
+                <button type="submit" class="next-btn pulse">Next →</button>
             </div>
 
         </form>
@@ -46,5 +53,33 @@
     </div>
 
 </div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+
+// TIMER
+let seconds = 0;
+setInterval(() => {
+    seconds++;
+    let min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    let sec = String(seconds % 60).padStart(2, '0');
+    document.getElementById("time").innerText = `${min}:${sec}`;
+}, 1000);
+
+// WORD COUNT
+const textarea = document.getElementById("answerBox");
+const wordCount = document.getElementById("wordCount");
+
+textarea.addEventListener("input", () => {
+    let words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
+    wordCount.innerText = words.length;
+});
+
+// AUTO FOCUS
+window.onload = () => {
+    textarea.focus();
+};
+
+</script>
 
 {% endblock %}
