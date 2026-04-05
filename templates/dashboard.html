@@ -12,77 +12,42 @@
         <p class="subtitle">Track your interview progress and improve your skills</p>
     </div>
 
-    <!-- ===== STATS CARDS ===== -->
+    <!-- ===== STATS ===== -->
     <div class="stats-grid">
 
-        <div class="card stat-card">
+        <div class="card stat-card glow">
             <h4>Total Attempts</h4>
             <p class="stat-number">{{ total_attempts }}</p>
         </div>
 
-        <div class="card stat-card">
+        <div class="card stat-card glow">
             <h4>Best Score</h4>
             <p class="stat-number">{{ best_score }}</p>
         </div>
 
     </div>
 
-    <!-- ===== PROFILE INFO ===== -->
+    <!-- ===== PROFILE ===== -->
     {% if user.name %}
     <div class="card profile-card">
+
         <div class="card-header">
             <h3>👤 Profile Information</h3>
-            <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                </svg>
-            </button>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
         </div>
-        <div class="profile-info">
-            <div class="info-item">
-                <strong>Full Name:</strong> {{ user.name }}
-            </div>
-            {% if user.email %}
-            <div class="info-item">
-                <strong>Email:</strong> {{ user.email }}
-            </div>
-            {% endif %}
-            {% if user.dob %}
-            <div class="info-item">
-                <strong>Date of Birth:</strong> {{ user.dob.strftime('%d %b %Y') }}
-            </div>
-            {% endif %}
-            {% if user.gender %}
-            <div class="info-item">
-                <strong>Gender:</strong> {{ user.gender }}
-            </div>
-            {% endif %}
-            {% if user.college %}
-            <div class="info-item">
-                <strong>College/University:</strong> {{ user.college }}
-            </div>
-            {% endif %}
-            {% if user.degree %}
-            <div class="info-item">
-                <strong>Degree:</strong> {{ user.degree }}
-            </div>
-            {% endif %}
-            {% if user.branch %}
-            <div class="info-item">
-                <strong>Branch:</strong> {{ user.branch }}
-            </div>
-            {% endif %}
-            {% if user.year_of_study %}
-            <div class="info-item">
-                <strong>Year of Study:</strong> {{ user.year_of_study }}
-            </div>
-            {% endif %}
-            {% if user.profession %}
-            <div class="info-item">
-                <strong>Profession:</strong> {{ user.profession }}
-            </div>
-            {% endif %}
+
+        <div class="profile-info grid-2">
+            <div class="info-item"><strong>Name:</strong> {{ user.name }}</div>
+            {% if user.email %}<div class="info-item"><strong>Email:</strong> {{ user.email }}</div>{% endif %}
+            {% if user.dob %}<div class="info-item"><strong>DOB:</strong> {{ user.dob.strftime('%d %b %Y') }}</div>{% endif %}
+            {% if user.gender %}<div class="info-item"><strong>Gender:</strong> {{ user.gender }}</div>{% endif %}
+            {% if user.college %}<div class="info-item"><strong>College:</strong> {{ user.college }}</div>{% endif %}
+            {% if user.degree %}<div class="info-item"><strong>Degree:</strong> {{ user.degree }}</div>{% endif %}
+            {% if user.branch %}<div class="info-item"><strong>Branch:</strong> {{ user.branch }}</div>{% endif %}
+            {% if user.year_of_study %}<div class="info-item"><strong>Year:</strong> {{ user.year_of_study }}</div>{% endif %}
+            {% if user.profession %}<div class="info-item"><strong>Profession:</strong> {{ user.profession }}</div>{% endif %}
         </div>
+
     </div>
     {% endif %}
 
@@ -91,36 +56,47 @@
         <h3>📊 Interview History</h3>
 
         {% if results %}
-            <div class="score-list">
-                {% for r in results %}
-                    <div class="score-item">
-                        <div>
-                            <strong>{{ r.category | capitalize }}</strong>
-                            <p class="date">{{ r.date.strftime('%d %b %Y') }}</p>
-                        </div>
+        <div class="score-list">
+            {% for r in results %}
+            <div class="score-item hover-card">
+                <div>
+                    <strong>{{ r.category | capitalize }}</strong>
+                    <p class="date">{{ r.date.strftime('%d %b %Y') }}</p>
+                </div>
 
-                        <div class="score-badge">
-                            {{ r.score }} / {{ r.total }}
-                        </div>
-                    </div>
-                {% endfor %}
+                <div class="score-badge">
+                    {{ r.score }} / {{ r.total }}
+                </div>
             </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <p class="empty-text">No interview attempts yet. Start one below 👇</p>
+        <p class="empty-text">No attempts yet. Start below 👇</p>
         {% endif %}
     </div>
 
-    <!-- ===== INTERVIEW TYPES ===== -->
+    <!-- ===== INTERVIEW ===== -->
     <div class="card">
         <h3>🚀 Start New Interview</h3>
 
         <div class="interview-grid">
-            <a href="/mode?category=hr" class="interview-btn">🧑‍💼 HR Interview</a>
-            <a href="/mode?category=technical" class="interview-btn">💻 Technical</a>
-            <a href="/mode?category=communication" class="interview-btn">🗣 Communication</a>
+            <a href="/mode?category=hr" class="interview-btn glass-btn">🧑‍💼 HR</a>
+            <a href="/mode?category=technical" class="interview-btn glass-btn">💻 Technical</a>
+            <a href="/mode?category=communication" class="interview-btn glass-btn">🗣 Communication</a>
         </div>
     </div>
 
 </div>
+
+<!-- ===== FULLSCREEN SCRIPT ===== -->
+<script>
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+}
+</script>
 
 {% endblock %}
