@@ -27,14 +27,17 @@
 
     </div>
 
+    <!-- ===== GRAPH ===== -->
     <div class="card">
-    <h3>📈 Performance Analytics</h3>
+        <h3>📈 Performance Analytics</h3>
 
-    {% if scores %}
-        <canvas id="scoreChart"></canvas>
-    {% else %}
-        <p class="empty-text">No data to display yet.</p>
-    {% endif %}
+        {% if scores and scores|length > 0 %}
+            <div style="height:300px;">
+                <canvas id="scoreChart"></canvas>
+            </div>
+        {% else %}
+            <p class="empty-text">No data to display yet.</p>
+        {% endif %}
     </div>
 
     <!-- ===== PROFILE ===== -->
@@ -109,39 +112,32 @@ function toggleFullscreen() {
 }
 </script>
 
-{% endblock %}
-
+<!-- ===== CHART SCRIPT ===== -->
 <script>
+const labels = {{ dates | tojson | safe }};
+const scores = {{ scores | tojson | safe }};
+
 const ctx = document.getElementById('scoreChart');
 
-if (ctx) {
+if (ctx && labels.length > 0) {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: {{ dates | tojson }},
+            labels: labels,
             datasets: [{
                 label: 'Score',
-                data: {{ scores | tojson }},
+                data: scores,
                 tension: 0.4,
-                fill: true
+                fill: true,
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
+            maintainAspectRatio: false
         }
     });
 }
 </script>
+
+{% endblock %}
