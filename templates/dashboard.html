@@ -1,143 +1,255 @@
 {% extends "base.html" %}
-
-{% block title %}Dashboard - Elevate AI{% endblock %}
+{% block title %}Dashboard — ElevateAI{% endblock %}
 
 {% block content %}
+<div class="container">
 
-<div class="dashboard-container">
-
-    <!-- ===== HEADER ===== -->
-    <div class="dashboard-header">
-        <h2>Welcome back, {{ username }} 👋</h2>
-        <p class="subtitle">Track your interview progress and improve your skills</p>
+    <!-- ═══ HEADER ═══ -->
+    <div class="dash-header">
+        <h1 class="dash-title">
+            {% if user.name %}Hello, {{ user.name.split()[0] }} 👋{% else %}Dashboard{% endif %}
+        </h1>
+        <p class="dash-sub">Track your performance and keep improving your interview skills.</p>
     </div>
 
-    <!-- ===== STATS ===== -->
-    <div class="stats-grid">
-
-        <div class="card stat-card glow">
-            <h4>Total Attempts</h4>
-            <p class="stat-number">{{ total_attempts }}</p>
+    <!-- ═══ STATS ═══ -->
+    <div class="stats-row">
+        <div class="stat-card stat-card-1">
+            <div class="stat-label">Total Attempts</div>
+            <div class="stat-value">{{ total_attempts }}</div>
         </div>
-
-        <div class="card stat-card glow">
-            <h4>Best Score</h4>
-            <p class="stat-number">{{ best_score }}</p>
+        <div class="stat-card stat-card-2">
+            <div class="stat-label">Best Score</div>
+            <div class="stat-value">{{ best_score }}<span class="stat-suffix">%</span></div>
         </div>
-
+        <div class="stat-card stat-card-3">
+            <div class="stat-label">Average Score</div>
+            <div class="stat-value">{{ avg_score }}<span class="stat-suffix">%</span></div>
+        </div>
     </div>
 
-    <!-- ===== GRAPH ===== -->
-    <div class="card">
-        <h3>📈 Performance Analytics</h3>
+    <div class="dash-grid">
 
-        {% if scores and scores|length > 0 %}
-            <div style="height:300px;">
-                <canvas id="scoreChart"></canvas>
+        <!-- ═══ PERFORMANCE CHART ═══ -->
+        <div class="card">
+            <div class="section-header">
+                <span class="section-title">📈 Performance Over Time</span>
             </div>
-        {% else %}
-            <p class="empty-text">No data to display yet.</p>
-        {% endif %}
-    </div>
-
-    <!-- ===== PROFILE ===== -->
-    {% if user.name %}
-    <div class="card profile-card">
-
-        <div class="card-header">
-            <h3>👤 Profile Information</h3>
-            <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
-        </div>
-
-        <div class="profile-info grid-2">
-            <div class="info-item"><strong>Name:</strong> {{ user.name }}</div>
-            {% if user.email %}<div class="info-item"><strong>Email:</strong> {{ user.email }}</div>{% endif %}
-            {% if user.dob %}<div class="info-item"><strong>DOB:</strong> {{ user.dob.strftime('%d %b %Y') }}</div>{% endif %}
-            {% if user.gender %}<div class="info-item"><strong>Gender:</strong> {{ user.gender }}</div>{% endif %}
-            {% if user.college %}<div class="info-item"><strong>College:</strong> {{ user.college }}</div>{% endif %}
-            {% if user.degree %}<div class="info-item"><strong>Degree:</strong> {{ user.degree }}</div>{% endif %}
-            {% if user.branch %}<div class="info-item"><strong>Branch:</strong> {{ user.branch }}</div>{% endif %}
-            {% if user.year_of_study %}<div class="info-item"><strong>Year:</strong> {{ user.year_of_study }}</div>{% endif %}
-            {% if user.profession %}<div class="info-item"><strong>Profession:</strong> {{ user.profession }}</div>{% endif %}
-        </div>
-
-    </div>
-    {% endif %}
-
-    <!-- ===== HISTORY ===== -->
-    <div class="card">
-        <h3>📊 Interview History</h3>
-
-        {% if results %}
-        <div class="score-list">
-            {% for r in results %}
-            <div class="score-item hover-card">
-                <div>
-                    <strong>{{ r.category | capitalize }}</strong>
-                    <p class="date">{{ r.date.strftime('%d %b %Y') }}</p>
-                </div>
-
-                <div class="score-badge">
-                    {{ r.score }} / {{ r.total }}
-                </div>
+            {% if chart_scores %}
+            <div class="chart-wrap">
+                <canvas id="perfChart" aria-label="Performance chart"></canvas>
             </div>
-            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <p class="empty-state-text">No data yet — complete your first interview below!</p>
+            </div>
+            {% endif %}
         </div>
-        {% else %}
-        <p class="empty-text">No attempts yet. Start below 👇</p>
+
+        <!-- ═══ START INTERVIEW ═══ -->
+        <div class="card">
+            <div class="section-header">
+                <span class="section-title">🚀 Start New Interview</span>
+            </div>
+            <div class="cat-grid">
+                <a href="{{ url_for('mode', category='hr') }}" class="cat-btn"
+                   style="--cat-color: {{ category_meta.hr.color }}">
+                    <div class="cat-icon">👔</div>
+                    <div>
+                        <div class="cat-name">HR Round</div>
+                        <div class="cat-desc">Behavioral &amp; personality</div>
+                    </div>
+                    {% if 'hr' in category_averages %}
+                    <div class="tag" style="margin-top:4px;">Avg: {{ category_averages.hr }}%</div>
+                    {% endif %}
+                </a>
+                <a href="{{ url_for('mode', category='technical') }}" class="cat-btn"
+                   style="--cat-color: {{ category_meta.technical.color }}">
+                    <div class="cat-icon">⚙️</div>
+                    <div>
+                        <div class="cat-name">Technical</div>
+                        <div class="cat-desc">Core CS &amp; engineering</div>
+                    </div>
+                    {% if 'technical' in category_averages %}
+                    <div class="tag" style="margin-top:4px;">Avg: {{ category_averages.technical }}%</div>
+                    {% endif %}
+                </a>
+                <a href="{{ url_for('mode', category='communication') }}" class="cat-btn"
+                   style="--cat-color: {{ category_meta.communication.color }}">
+                    <div class="cat-icon">💬</div>
+                    <div>
+                        <div class="cat-name">Communication</div>
+                        <div class="cat-desc">Soft skills &amp; situational</div>
+                    </div>
+                    {% if 'communication' in category_averages %}
+                    <div class="tag" style="margin-top:4px;">Avg: {{ category_averages.communication }}%</div>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+
+        <!-- ═══ PROFILE INFO ═══ -->
+        {% if user.name %}
+        <div class="card">
+            <div class="section-header">
+                <span class="section-title">👤 Your Profile</span>
+                <a href="{{ url_for('profile_setup') }}" class="btn btn-ghost" style="padding:6px 14px;font-size:0.8rem;">Edit</a>
+            </div>
+            <div class="profile-grid">
+                {% if user.name %}
+                <div class="profile-item">
+                    <div class="profile-item-label">Full Name</div>
+                    <div class="profile-item-value">{{ user.name }}</div>
+                </div>
+                {% endif %}
+                {% if user.email %}
+                <div class="profile-item">
+                    <div class="profile-item-label">Email</div>
+                    <div class="profile-item-value">{{ user.email }}</div>
+                </div>
+                {% endif %}
+                {% if user.college %}
+                <div class="profile-item">
+                    <div class="profile-item-label">College</div>
+                    <div class="profile-item-value">{{ user.college }}</div>
+                </div>
+                {% endif %}
+                {% if user.degree and user.branch %}
+                <div class="profile-item">
+                    <div class="profile-item-label">Program</div>
+                    <div class="profile-item-value">{{ user.degree }} · {{ user.branch }}</div>
+                </div>
+                {% endif %}
+                {% if user.year_of_study %}
+                <div class="profile-item">
+                    <div class="profile-item-label">Year</div>
+                    <div class="profile-item-value">{{ user.year_of_study }}</div>
+                </div>
+                {% endif %}
+                {% if user.profession %}
+                <div class="profile-item">
+                    <div class="profile-item-label">Profession</div>
+                    <div class="profile-item-value">{{ user.profession }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
         {% endif %}
-    </div>
 
-    <!-- ===== INTERVIEW ===== -->
-    <div class="card">
-        <h3>🚀 Start New Interview</h3>
+        <!-- ═══ HISTORY ═══ -->
+        <div class="card">
+            <div class="section-header">
+                <span class="section-title">📋 Interview History</span>
+                {% if results %}
+                <span class="tag">{{ total_attempts }} session{{ 's' if total_attempts != 1 }}</span>
+                {% endif %}
+            </div>
 
-        <div class="interview-grid">
-            <a href="/mode?category=hr" class="interview-btn glass-btn">🧑‍💼 HR</a>
-            <a href="/mode?category=technical" class="interview-btn glass-btn">💻 Technical</a>
-            <a href="/mode?category=communication" class="interview-btn glass-btn">🗣 Communication</a>
+            {% if results %}
+            <div class="history-list">
+                {% for r in results | reverse %}
+                {% set pct = r.percentage %}
+                {% set badge_cls = 'badge-excellent' if pct >= 75 else ('badge-good' if pct >= 50 else 'badge-poor') %}
+                <div class="history-item">
+                    <div class="history-left">
+                        <div class="history-dot"
+                             style="background: {{ category_meta[r.category].color if r.category in category_meta else 'var(--brand)' }}">
+                        </div>
+                        <div>
+                            <div class="history-name">
+                                {{ category_meta[r.category].icon if r.category in category_meta else '📝' }}
+                                {{ r.category | capitalize }}
+                                <span class="tag" style="margin-left:6px;">
+                                    {{ difficulty_meta[r.difficulty].icon if r.difficulty in difficulty_meta else '·' }}
+                                    {{ r.difficulty | capitalize }}
+                                </span>
+                            </div>
+                            <div class="history-meta">{{ r.date.strftime('%d %b %Y · %H:%M') }}</div>
+                        </div>
+                    </div>
+                    <span class="score-badge {{ badge_cls }}">{{ r.score }}/{{ r.total }} · {{ r.percentage }}%</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">🎯</div>
+                <p class="empty-state-text">No interviews yet — pick a category above to begin!</p>
+            </div>
+            {% endif %}
         </div>
-    </div>
 
+    </div>
 </div>
+{% endblock %}
 
-<!-- ===== FULLSCREEN SCRIPT ===== -->
+{% block scripts %}
+{% if chart_scores %}
 <script>
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-    } else {
-        document.exitFullscreen();
-    }
-}
-</script>
+const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+const textColor = isDark ? '#A0A0C0' : '#5A5A7A';
 
-<!-- ===== CHART SCRIPT ===== -->
-<script>
-const labels = {{ dates | tojson | safe }};
-const scores = {{ scores | tojson | safe }};
+const ctx = document.getElementById('perfChart').getContext('2d');
+const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+gradient.addColorStop(0, 'rgba(108,99,255,0.3)');
+gradient.addColorStop(1, 'rgba(108,99,255,0)');
 
-const ctx = document.getElementById('scoreChart');
-
-if (ctx && labels.length > 0) {
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Score',
-                data: scores,
-                tension: 0.4,
-                fill: true,
-                borderWidth: 2
-            }]
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels | tojson }},
+        datasets: [{
+            label: 'Score %',
+            data: {{ chart_scores | tojson }},
+            borderColor: '#6C63FF',
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#6C63FF',
+            pointBorderColor: isDark ? '#14141F' : '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: isDark ? '#1A1A2E' : '#FFFFFF',
+                titleColor: isDark ? '#F0F0F8' : '#0D0D14',
+                bodyColor: isDark ? '#A0A0C0' : '#5A5A7A',
+                borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+                borderWidth: 1,
+                padding: 12,
+                callbacks: {
+                    label: ctx => ` Score: ${ctx.parsed.y}%`
+                }
+            }
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
+        scales: {
+            x: {
+                grid: { color: gridColor },
+                ticks: { color: textColor, font: { family: 'Sora', size: 11 } }
+            },
+            y: {
+                min: 0, max: 100,
+                grid: { color: gridColor },
+                ticks: {
+                    color: textColor,
+                    font: { family: 'JetBrains Mono', size: 11 },
+                    callback: v => v + '%'
+                }
+            }
         }
-    });
-}
+    }
+});
 </script>
-
+{% endif %}
 {% endblock %}
