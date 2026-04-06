@@ -1,93 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Elevate AI{% endblock %}</title>
+    <title>{% block title %}ElevateAI{% endblock %}</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Chart.js (loaded in head, before content) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% block head %}{% endblock %}
 </head>
 
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar glass">
-    <div class="nav-container">
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}" class="nav-brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <span>ElevateAI</span>
+        </a>
 
-        <!-- LEFT -->
-        <div class="nav-left">
-            <a href="/dashboard" class="logo-link">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo-img">
-                <span class="logo-text">Elevate AI</span>
-            </a>
-        </div>
-
-        <!-- RIGHT -->
-        <div class="nav-right">
-            {% if session.get("user") %}
-                <a href="/dashboard" class="nav-link">Dashboard</a>
-                <a href="/logout" class="nav-link logout-btn">Logout</a>
+        <div class="nav-actions">
+            {% if session.get("user_id") %}
+                <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a>
+                <div class="nav-divider"></div>
+                <a href="{{ url_for('logout') }}" class="nav-link nav-logout">Sign Out</a>
             {% else %}
-                <a href="/" class="nav-link">Login</a>
-                <a href="/signup" class="nav-link">Signup</a>
+                <a href="{{ url_for('login') }}" class="nav-link {% if request.endpoint == 'login' %}active{% endif %}">Sign In</a>
+                <a href="{{ url_for('signup') }}" class="nav-btn">Get Started</a>
             {% endif %}
-
-            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <button class="theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle dark mode">
+                <span class="theme-icon-light">☀️</span>
+                <span class="theme-icon-dark">🌙</span>
+            </button>
         </div>
-
     </div>
 </nav>
 
-<!-- ===== FLASH MESSAGES ===== -->
-<div class="flash-container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</div>
+<!-- ═══════════════ FLASH MESSAGES ═══════════════ -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-stack" id="flashStack">
+        {% for category, message in messages %}
+        <div class="flash flash-{{ category }}" role="alert">
+            <span class="flash-icon">
+                {% if category == 'success' %}✓{% elif category == 'danger' %}✕{% elif category == 'warning' %}⚠{% else %}ℹ{% endif %}
+            </span>
+            <span>{{ message }}</span>
+            <button class="flash-close" onclick="this.parentElement.remove()" aria-label="Close">×</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
 
-<!-- ===== MAIN CONTENT ===== -->
-<div class="main-container">
-    {% block content %}
-    {% endblock %}
-</div>
+<!-- ═══════════════ PAGE CONTENT ═══════════════ -->
+<main class="page-main" id="pageMain">
+    {% block content %}{% endblock %}
+</main>
 
-<!-- ===== FOOTER ===== -->
+<!-- ═══════════════ FOOTER ═══════════════ -->
 <footer class="footer">
-    <p>© 2026 Elevate AI • Built with ❤️ using Flask</p>
+    <div class="footer-inner">
+        <span class="footer-brand">ElevateAI</span>
+        <span class="footer-sep">·</span>
+        <span>Final Year Project © 2026</span>
+        <span class="footer-sep">·</span>
+        <span>Built with Flask &amp; 💜</span>
+    </div>
 </footer>
 
-<!-- ===== CHART.JS (VERY IMPORTANT) ===== -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- ===== THEME SCRIPT ===== -->
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
 <script>
-function toggleTheme() {
-    document.body.classList.toggle("dark");
+// ── THEME MANAGEMENT ──
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeToggle');
 
-    if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-    } else {
-        localStorage.setItem("theme", "light");
-    }
+function applyTheme(theme) {
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('elevate_theme', theme);
 }
 
-// Apply saved theme
-window.onload = function () {
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
+function toggleTheme() {
+    const current = html.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+// Restore saved theme
+const savedTheme = localStorage.getItem('elevate_theme') || 'light';
+applyTheme(savedTheme);
+themeBtn.addEventListener('click', toggleTheme);
+
+// ── AUTO-DISMISS FLASH ──
+setTimeout(() => {
+    const stack = document.getElementById('flashStack');
+    if (stack) {
+        stack.style.opacity = '0';
+        stack.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => stack.remove(), 500);
     }
-};
+}, 4000);
+
+// ── PAGE ENTRY ANIMATION ──
+document.addEventListener('DOMContentLoaded', () => {
+    const main = document.getElementById('pageMain');
+    if (main) {
+        main.style.opacity = '0';
+        main.style.transform = 'translateY(12px)';
+        requestAnimationFrame(() => {
+            main.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            main.style.opacity = '1';
+            main.style.transform = 'translateY(0)';
+        });
+    }
+});
 </script>
+
+{% block scripts %}{% endblock %}
 
 </body>
 </html>
