@@ -1,242 +1,138 @@
 {% extends "base.html" %}
-
-{% block title %}Profile Setup - Elevate AI{% endblock %}
+{% block title %}Profile Setup — ElevateAI{% endblock %}
 
 {% block content %}
+<div class="profile-page">
+    <div class="profile-setup-card">
 
-<div class="profile-container">
-
-    <div class="profile-card">
-
-        <!-- HEADER -->
-        <div class="profile-header">
-            <div class="header-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-            </div>
-            <h1>Complete Your Profile</h1>
-            <p class="header-subtitle">Help us personalize your interview experience with just a few details</p>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
+        <div class="setup-header">
+            <h1 class="setup-title">Complete Your Profile</h1>
+            <p class="setup-sub">Help us personalise your interview experience. This information is only used to tailor your coaching.</p>
         </div>
 
-        <!-- FORM -->
-        <form method="POST" class="profile-form">
+        <form method="POST" action="{{ url_for('profile_setup') }}">
 
-            <!-- ROW 1: Name and Email -->
+            <!-- Personal Info -->
             <div class="form-section">
-                <h3 class="section-title">👤 Personal Information</h3>
+                <div class="form-section-title">Personal Information</div>
                 <div class="form-row">
-                    <div class="input-group">
-                        <label class="input-label">Full Name</label>
-                        <div class="input-wrapper">
+                    <div class="field">
+                        <label class="field-label" for="name">Full Name <span style="color:var(--danger)">*</span></label>
+                        <div class="input-wrap has-icon">
                             <span class="input-icon">👤</span>
-                            <input 
-                                type="text" 
-                                name="name" 
-                                placeholder="Enter your full name" 
-                                required
-                                value="{{ user.name or '' }}"
-                            >
+                            <input class="field-input" type="text" id="name" name="name"
+                                   placeholder="Your full name" required
+                                   value="{{ user.name or '' }}">
                         </div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="input-label">Email Address</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📧</span>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                placeholder="Enter your email" 
-                                value="{{ user.email or '' }}"
-                            >
+                    <div class="field">
+                        <label class="field-label" for="email">Email Address</label>
+                        <div class="input-wrap has-icon">
+                            <span class="input-icon">✉</span>
+                            <input class="field-input" type="email" id="email" name="email"
+                                   placeholder="you@example.com"
+                                   value="{{ user.email or '' }}">
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- ROW 2: DOB, Gender, College -->
-            <div class="form-section">
-                <h3 class="section-title">📅 Additional Details</h3>
-                <div class="form-row-three">
-                    <div class="input-group">
-                        <label class="input-label">Date of Birth</label>
-                        <div class="input-wrapper">
+                <div class="form-row">
+                    <div class="field">
+                        <label class="field-label" for="dob">Date of Birth</label>
+                        <div class="input-wrap has-icon">
                             <span class="input-icon">📅</span>
-                            <input 
-                                type="date" 
-                                name="dob" 
-                                value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
-                            >
+                            <input class="field-input" type="date" id="dob" name="dob"
+                                   value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}">
                         </div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="input-label">Gender</label>
-                        <div class="input-wrapper">
+                    <div class="field">
+                        <label class="field-label" for="gender">Gender</label>
+                        <div class="input-wrap has-icon">
                             <span class="input-icon">⚧</span>
-                            <select name="gender">
-                                <option value="">Select Gender</option>
-                                <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
-                                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
-                                <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
-                                <option value="Prefer not to say" {% if user.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+                            <select class="field-select" id="gender" name="gender">
+                                <option value="">Prefer not to say</option>
+                                {% for opt in ['Male', 'Female', 'Non-binary', 'Other'] %}
+                                <option value="{{ opt }}" {% if user.gender == opt %}selected{% endif %}>{{ opt }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="input-label">College/University</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🎓</span>
-                            <input 
-                                type="text" 
-                                name="college" 
-                                placeholder="Enter your college" 
-                                value="{{ user.college or '' }}"
-                            >
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <!-- ROW 3: Degree and Branch -->
+            <!-- Academic Info -->
             <div class="form-section">
-                <h3 class="section-title">📚 Academic Information</h3>
-                <div class="form-row">
-                    <div class="input-group">
-                        <label class="input-label">Degree</label>
-                        <div class="input-wrapper">
+                <div class="form-section-title">Academic Details</div>
+                <div class="form-row-3">
+                    <div class="field">
+                        <label class="field-label" for="college">College / University</label>
+                        <div class="input-wrap has-icon">
                             <span class="input-icon">🎓</span>
-                            <input 
-                                type="text" 
-                                name="degree" 
-                                placeholder="e.g., BTech, BCA, BSc" 
-                                value="{{ user.degree or '' }}"
-                            >
+                            <input class="field-input" type="text" id="college" name="college"
+                                   placeholder="e.g. VTU, MSRIT"
+                                   value="{{ user.college or '' }}">
                         </div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="input-label">Branch/Specialization</label>
-                        <div class="input-wrapper">
+                    <div class="field">
+                        <label class="field-label" for="degree">Degree</label>
+                        <div class="input-wrap has-icon">
+                            <span class="input-icon">📜</span>
+                            <input class="field-input" type="text" id="degree" name="degree"
+                                   placeholder="e.g. BTech, BCA"
+                                   value="{{ user.degree or '' }}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="branch">Branch / Specialisation</label>
+                        <div class="input-wrap has-icon">
                             <span class="input-icon">🔬</span>
-                            <input 
-                                type="text" 
-                                name="branch" 
-                                placeholder="e.g., CSE, ECE, Mechanical" 
-                                value="{{ user.branch or '' }}"
-                            >
+                            <input class="field-input" type="text" id="branch" name="branch"
+                                   placeholder="e.g. CSE, AI/ML"
+                                   value="{{ user.branch or '' }}">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ROW 4: Year of Study and Profession -->
+            <!-- Year of Study -->
             <div class="form-section">
-                <h3 class="section-title">💼 Professional Details</h3>
-                <div class="form-row">
-                    <div class="button-group">
-                        <label class="input-label">Year of Study</label>
-                        <button type="button" class="toggle-btn" onclick="toggleOptions('year-options')">
-                            <span class="btn-icon">📚</span>
-                            <span class="btn-text">{{ user.year_of_study or 'Select Year' }}</span>
-                            <span class="arrow">▼</span>
-                        </button>
-                        <div id="year-options" class="radio-buttons" style="display: none;">
-                            <input type="radio" id="year1" name="year_of_study" value="1st Year" {% if user.year_of_study == '1st Year' %}checked{% endif %}>
-                            <label for="year1" class="radio-btn">1st Year</label>
-                            
-                            <input type="radio" id="year2" name="year_of_study" value="2nd Year" {% if user.year_of_study == '2nd Year' %}checked{% endif %}>
-                            <label for="year2" class="radio-btn">2nd Year</label>
-                            
-                            <input type="radio" id="year3" name="year_of_study" value="3rd Year" {% if user.year_of_study == '3rd Year' %}checked{% endif %}>
-                            <label for="year3" class="radio-btn">3rd Year</label>
-                            
-                            <input type="radio" id="year4" name="year_of_study" value="4th Year" {% if user.year_of_study == '4th Year' %}checked{% endif %}>
-                            <label for="year4" class="radio-btn">4th Year</label>
-                            
-                            <input type="radio" id="year5" name="year_of_study" value="Final Year" {% if user.year_of_study == 'Final Year' %}checked{% endif %}>
-                            <label for="year5" class="radio-btn">Final Year</label>
-                            
-                            <input type="radio" id="year6" name="year_of_study" value="Completed" {% if user.year_of_study == 'Completed' %}checked{% endif %}>
-                            <label for="year6" class="radio-btn">Completed</label>
-                        </div>
+                <div class="form-section-title">Year of Study</div>
+                <div class="radio-group">
+                    {% for yr in ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Final Year', 'Completed'] %}
+                    <div class="radio-pill">
+                        <input type="radio" id="yr_{{ loop.index }}" name="year_of_study" value="{{ yr }}"
+                               {% if user.year_of_study == yr %}checked{% endif %}>
+                        <label for="yr_{{ loop.index }}">{{ yr }}</label>
                     </div>
-
-                    <div class="button-group">
-                        <label class="input-label">Profession</label>
-                        <button type="button" class="toggle-btn" onclick="toggleOptions('profession-options')">
-                            <span class="btn-icon">💼</span>
-                            <span class="btn-text">{{ user.profession or 'Select Profession' }}</span>
-                            <span class="arrow">▼</span>
-                        </button>
-                        <div id="profession-options" class="radio-buttons" style="display: none;">
-                            <input type="radio" id="prof1" name="profession" value="Student" {% if user.profession == 'Student' %}checked{% endif %}>
-                            <label for="prof1" class="radio-btn">Student</label>
-                            
-                            <input type="radio" id="prof2" name="profession" value="Developer" {% if user.profession == 'Developer' %}checked{% endif %}>
-                            <label for="prof2" class="radio-btn">Developer</label>
-                            
-                            <input type="radio" id="prof3" name="profession" value="Fresher" {% if user.profession == 'Fresher' %}checked{% endif %}>
-                            <label for="prof3" class="radio-btn">Fresher</label>
-                            
-                            <input type="radio" id="prof4" name="profession" value="Working Professional" {% if user.profession == 'Working Professional' %}checked{% endif %}>
-                            <label for="prof4" class="radio-btn">Working Professional</label>
-                            
-                            <input type="radio" id="prof5" name="profession" value="Other" {% if user.profession == 'Other' %}checked{% endif %}>
-                            <label for="prof5" class="radio-btn">Other</label>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="submit-btn">
-                    <span class="btn-icon">🚀</span>
-                    Complete Profile
+            <!-- Profession -->
+            <div class="form-section">
+                <div class="form-section-title">Current Role</div>
+                <div class="radio-group">
+                    {% for prof in ['Student', 'Fresher', 'Developer', 'Working Professional', 'Other'] %}
+                    <div class="radio-pill">
+                        <input type="radio" id="prof_{{ loop.index }}" name="profession" value="{{ prof }}"
+                               {% if user.profession == prof %}checked{% endif %}>
+                        <label for="prof_{{ loop.index }}">{{ prof }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex" style="gap:12px;justify-content:flex-end;margin-top:8px;">
+                {% if user.profile_complete %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">Cancel</a>
+                {% endif %}
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% if user.profile_complete %}Save Changes{% else %}Complete Profile →{% endif %}
                 </button>
             </div>
 
         </form>
 
     </div>
-
 </div>
-
-<!-- TOGGLE OPTIONS SCRIPT -->
-<script>
-function toggleOptions(optionsId) {
-    const options = document.getElementById(optionsId);
-    const button = options.previousElementSibling;
-    const arrow = button.querySelector('.arrow');
-    
-    if (options.style.display === 'none' || options.style.display === '') {
-        options.style.display = 'flex';
-        arrow.textContent = '▲';
-    } else {
-        options.style.display = 'none';
-        arrow.textContent = '▼';
-    }
-}
-
-// Update button text when radio button is selected
-document.querySelectorAll('input[type="radio"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-        const buttonGroup = this.closest('.button-group');
-        const toggleBtn = buttonGroup.querySelector('.toggle-btn');
-        const selectedLabel = buttonGroup.querySelector(`label[for="${this.id}"]`);
-        
-        if (selectedLabel) {
-            const fieldName = this.name === 'year_of_study' ? 'Year of Study' : 'Profession';
-            toggleBtn.innerHTML = `${fieldName} ${selectedLabel.textContent} <span class="arrow">▼</span>`;
-        }
-    });
-});
-</script>
-
 {% endblock %}
