@@ -1,80 +1,83 @@
 {% extends "base.html" %}
-
-{% block title %}Login - Elevate AI{% endblock %}
+{% block title %}Sign In — ElevateAI{% endblock %}
 
 {% block content %}
-
-<div class="auth-container">
-
+<div class="auth-page">
     <div class="auth-card">
 
-        <!-- HEADER -->
-        <div class="auth-header">
-            <div class="header-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="9,9 15,15 9,15 9,9"></polyline>
-                    <line x1="9" y1="9" x2="9" y2="15"></line>
-                </svg>
-            </div>
-            <h2>Welcome Back</h2>
-            <p class="subtitle">Login to continue your AI interview journey</p>
+        <div class="auth-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+            </svg>
         </div>
 
-        <!-- FORM -->
-        <form method="POST" class="auth-form">
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-sub">Sign in to continue your interview prep</p>
 
-            <div class="input-group">
-                <div class="input-wrapper">
-                    <span class="input-icon">👤</span>
-                    <input 
-                        type="text" 
-                        name="username" 
-                        placeholder="Enter your username" 
+        <form method="POST" action="{{ url_for('login') }}" autocomplete="on">
+
+            <div class="field">
+                <label class="field-label" for="username">Username</label>
+                <div class="input-wrap has-icon">
+                    <span class="input-icon">@</span>
+                    <input
+                        class="field-input"
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="your_username"
                         required
+                        autocomplete="username"
+                        autofocus
                     >
                 </div>
             </div>
 
-            <div class="input-group">
-                <div class="input-wrapper">
+            <div class="field">
+                <label class="field-label" for="password">Password</label>
+                <div class="input-wrap has-icon">
                     <span class="input-icon">🔒</span>
-                    <div class="password-wrapper">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            placeholder="Enter your password" 
-                            required
-                        >
-                        <span class="toggle-eye" onclick="togglePassword()">👁️</span>
-                    </div>
+                    <input
+                        class="field-input"
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="eye-toggle" onclick="togglePwd('password', this)" aria-label="Show/hide password">👁</button>
                 </div>
             </div>
 
-            <button type="submit" class="auth-btn login-btn">
-                <span class="btn-icon">🚀</span>
-                Login to Your Account
+            <button type="submit" class="btn btn-primary btn-lg btn-full mt-24">
+                Sign In →
             </button>
 
         </form>
 
-        <!-- FOOTER -->
-        <p class="bottom-text">
-            Don’t have an account?
-            <a href="/signup">Create one here</a>
-        </p>
+        <div class="auth-footer mt-16">
+            New to ElevateAI?
+            <a href="{{ url_for('signup') }}">Create an account</a>
+        </div>
 
     </div>
-
 </div>
+{% endblock %}
 
-<!-- PASSWORD TOGGLE -->
+{% block scripts %}
 <script>
-function togglePassword() {
-    const pwd = document.getElementById("password");
-    pwd.type = pwd.type === "password" ? "text" : "password";
+function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+    }
 }
 </script>
-
 {% endblock %}
