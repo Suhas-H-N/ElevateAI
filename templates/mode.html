@@ -1,30 +1,61 @@
 {% extends "base.html" %}
-
-{% block title %}{{ category | capitalize }} Interview Mode - Elevate AI{% endblock %}
+{% block title %}{{ meta.label }} — ElevateAI{% endblock %}
 
 {% block content %}
+<div class="mode-page">
+    <div class="mode-card">
 
-<div class="dashboard-container">
-
-    <!-- ===== HEADER ===== -->
-    <div class="dashboard-header">
-        <h2>{{ category | capitalize }} Interview</h2>
-        <p class="subtitle">Choose your interview mode to get started</p>
-    </div>
-
-    <!-- ===== MODE SELECTION ===== -->
-    <div class="card">
-        <h3>🎯 Select Difficulty Level</h3>
-
-        <div class="interview-grid">
-            <a href="/interview?category={{ category }}&mode=easy" class="interview-btn">🟢 Easy</a>
-            <a href="/interview?category={{ category }}&mode=medium" class="interview-btn">🟡 Medium</a>
-            <a href="/interview?category={{ category }}&mode=hard" class="interview-btn">🔴 Hard</a>
+        <div class="mode-header">
+            <div class="mode-icon" style="background: rgba({{ '108,99,255' if category == 'hr' else ('14,165,233' if category == 'technical' else '16,185,129') }}, 0.12);">
+                {{ meta.icon }}
+            </div>
+            <div>
+                <div class="mode-title">{{ meta.label }}</div>
+                <div class="mode-sub">{{ meta.description }}</div>
+            </div>
         </div>
 
-        <p class="note">Note: Difficulty levels are not yet implemented in the backend. All interviews use the same questions for now.</p>
+        <p class="text-muted mb-16" style="font-size:0.875rem;">
+            Select your difficulty level. Each level has different questions with varying depth expectations.
+        </p>
+
+        <div class="diff-grid">
+            <a href="{{ url_for('interview', category=category, difficulty='easy') }}"
+               class="diff-btn"
+               style="--diff-color: {{ difficulty_meta.easy.color }}">
+                <div class="diff-dot"></div>
+                <div class="diff-label">Easy</div>
+                <div class="diff-detail">Beginner friendly<br>~10 words expected</div>
+            </a>
+
+            <a href="{{ url_for('interview', category=category, difficulty='medium') }}"
+               class="diff-btn"
+               style="--diff-color: {{ difficulty_meta.medium.color }}">
+                <div class="diff-dot"></div>
+                <div class="diff-label">Medium</div>
+                <div class="diff-detail">Structured answers<br>~20 words expected</div>
+            </a>
+
+            <a href="{{ url_for('interview', category=category, difficulty='hard') }}"
+               class="diff-btn"
+               style="--diff-color: {{ difficulty_meta.hard.color }}">
+                <div class="diff-dot"></div>
+                <div class="diff-label">Hard</div>
+                <div class="diff-detail">Detailed responses<br>~35 words expected</div>
+            </a>
+        </div>
+
+        <div style="margin-top:8px;padding:12px 14px;background:var(--bg-elevated);border-radius:var(--radius-md);border:1px solid var(--border);font-size:0.8125rem;color:var(--text-muted);">
+            💡 <strong style="color:var(--text-secondary)">Tip:</strong>
+            Use the <strong>STAR method</strong> — Situation, Task, Action, Result — to structure strong answers.
+        </div>
+
+        <div class="mt-24">
+            <a href="{{ url_for('dashboard') }}" class="mode-back">
+                ← Back to Dashboard
+            </a>
+        </div>
+
     </div>
-
 </div>
-
 {% endblock %}
