@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Interview · Q{{ current }}/{{ total }} — ElevateAI{% endblock %}
+
+{% block content %}
+<div class="interview-page">
+    <div class="interview-wrap">
+
+        <!-- Meta row -->
+        <div class="interview-meta">
+            <div class="meta-badge">
+                {{ meta.icon }} {{ meta.label }}
+                &nbsp;·&nbsp;
+                <span style="color:var(--text-muted)">{{ difficulty_meta.icon }} {{ difficulty_meta.label }}</span>
+            </div>
+            <div class="meta-badge timer-badge">
+                ⏱ <span id="timerDisplay">00:00</span>
+            </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress }}%;"></div>
+        </div>
+
+        <div class="card">
+
+            <!-- Question number -->
+            <div class="q-number">Question {{ current }} of {{ total }}</div>
+
+            <!-- Question text -->
+            <div class="q-text">{{ question }}</div>
+
+            <!-- STAR method hint -->
+            <div class="star-hint">
+                <strong>STAR method:</strong>
+                <strong>S</strong>ituation → <strong>T</strong>ask → <strong>A</strong>ction → <strong>R</strong>esult
+            </div>
+
+            <!-- Answer form -->
+            <form method="POST" id="answerForm">
+                <textarea
+                    class="field-textarea"
+                    id="answerBox"
+                    name="answer"
+                    placeholder="Type your answer here… Be specific and give real examples."
+                    required
+                    rows="6"
+                ></textarea>
+
+                <div class="answer-controls">
+                    <span class="word-counter" id="wordCounter">0 words</span>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Target: {{ difficulty_meta.label }} level</span>
+                </div>
+
+                <div class="interview-actions mt-16">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">✕ Exit Interview</a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        {% if current == total %}
+                            Finish &amp; See Results →
+                        {% else %}
+                            Next Question →
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ── TIMER ──
+let seconds = 0;
+const timerEl = document.getElementById('timerDisplay');
+const timerId = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    timerEl.textContent = `${m}:${s}`;
+}, 1000);
+
+// ── WORD COUNT ──
+const textarea = document.getElementById('answerBox');
+const counter = document.getElementById('wordCounter');
+
+const thresholds = { easy: 10, medium: 20, hard: 35 };
+const difficulty = '{{ difficulty_meta.label | lower }}';
+const target = thresholds[difficulty] || 20;
+
+textarea.addEventListener('input', () => {
+    const words = textarea.value.trim() ? textarea.value.trim().split(/\s+/) : [];
+    const n = words.length;
+    counter.textContent = `${n} word${n !== 1 ? 's' : ''}`;
+    counter.className = 'word-counter';
+    if (n >= target * 1.5) counter.classList.add('great');
+    else if (n >= target) counter.classList.add('good');
+});
+
+// ── AUTO FOCUS ──
+window.addEventListener('DOMContentLoaded', () => textarea.focus());
+
+// ── PREVENT ACCIDENTAL EXIT ──
+window.addEventListener('beforeunload', (e) => {
+    if (textarea.value.trim().length > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
+// Clear beforeunload on intentional submit
+document.getElementById('answerForm').addEventListener('submit', () => {
+    clearInterval(timerId);
+    window.onbeforeunload = null;
+});
+</script>
+{% endblock %}
