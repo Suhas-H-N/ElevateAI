@@ -1,102 +1,206 @@
-# ElevateAI 🚀
+# ElevateAI v2.0 — AI-Powered Interview Preparation Platform
 
-ElevateAI is an AI-powered interview preparation platform built using Flask.  
-It helps users practice interview questions, receive feedback, and track their performance.
+> Final Year Project | Flask · SQLAlchemy · Gemini AI · Chart.js
 
-## Features
+---
 
-- User Signup and Login
-- Dashboard with interview statistics
-- HR, Technical, and Communication interview categories
-- Timed and Untimed interview modes
-- AI-style feedback based on answers
-- Interview score tracking
-- Interview history with date
-- Category-wise score tracking
-- Dark / Light theme
-- Responsive UI
+## 🚀 What Is ElevateAI?
 
-## Tech Stack
+ElevateAI is a full-stack web application that helps students and freshers prepare for job interviews through structured practice, AI-powered feedback, and real-time performance analytics.
 
-Frontend:
-- HTML
-- CSS
-- JavaScript
-- Jinja Templates
+---
 
-Backend:
-- Python
-- Flask
+## ✅ Full Feature List
 
-Database:
-- SQLite
-- Flask-SQLAlchemy
+| Feature | Details |
+|---------|---------|
+| 🤖 **Gemini AI Feedback** | Semantic answer evaluation via Google Gemini 2.0 Flash — scores 0–10, detects keywords, suggests improvements |
+| 🎤 **Speech-to-Text** | Browser-native Web Speech API — speak your answers instead of typing |
+| 🔥 **Streak Tracker** | Daily practice streaks with banner on dashboard |
+| 🎯 **Radar Chart** | Spider chart showing HR / Technical / Communication strengths |
+| 📈 **Line Chart** | Score % over time via Chart.js |
+| 🏆 **Leaderboard** | Weekly + all-time top scorers (own page + dashboard preview) |
+| 📖 **Answer History** | Review every past Q&A with AI feedback, keyword tags, score bars |
+| ⏱ **Countdown Timer** | Per-question time limit (Easy 2min / Medium 3min / Hard 4min) — auto-submits |
+| 🏢 **Company Packs** | Amazon, Google, TCS, Infosys, Microsoft question sets |
+| 💡 **Hint System** | STAR / CAR framework hints shown on demand per category |
+| ✉️ **Email Verification** | Flask-Mail + Gmail SMTP — token verified on signup |
+| 🔑 **Forgot Password** | Token-based secure reset via email (1-hour expiry) |
+| 📄 **Resume Upload** | PDF upload (max 5MB) stored per user |
+| 🌙 **Dark / Light Mode** | Persisted in localStorage |
+| 🏅 **Difficulty Levels** | Easy / Medium / Hard — different questions AND scoring thresholds |
+| 🔐 **Auth** | Hashed passwords (Werkzeug), session management, login guard |
+| 🌐 **REST API** | `/api/stats`, `/api/leaderboard`, `/api/hint/<category>` |
+| 🐳 **Docker Ready** | `.env.example` + `.gitignore` provided |
+| 📱 **Responsive** | Mobile-first layouts for all pages |
 
-Version Control:
-- Git
-- GitHub
+---
 
-## Project Structure
+## 🗂 Project Structure
 
-ElevateAI
-│
-├── app.py
+```
+ElevateAI/
+├── app.py                        # All Flask routes, models, AI logic
+├── requirements.txt
+├── .env.example                  # Copy to .env and fill values
+├── .gitignore
 ├── README.md
-│
-├── instance
-│   └── users.db
-│
-├── static
-│   └── style.css
-│
-└── templates
-    ├── base.html
-    ├── dashboard.html
-    ├── interview.html
+├── instance/
+│   └── elevate_ai.db             # SQLite database (auto-created, git-ignored)
+├── static/
+│   ├── style.css                 # Complete design system
+│   └── uploads/                  # Resume PDFs (git-ignored)
+└── templates/
+    ├── base.html                 # Navbar, flash, footer, theme toggle
     ├── login.html
-    ├── mode.html
-    ├── result.html
-    └── signup.html
+    ├── signup.html               # Password strength meter + confirm field
+    ├── forgot_password.html
+    ├── reset_password.html
+    ├── profile_setup.html        # Resume upload + radio pills
+    ├── dashboard.html            # Stats, radar, line chart, leaderboard, streaks
+    ├── mode.html                 # Difficulty + company pack selection
+    ├── interview.html            # Speech-to-text, countdown timer, hint box
+    ├── result.html               # AI feedback, keyword tags, confetti on 100%
+    ├── history.html              # Past Q&A review with AI scores
+    ├── leaderboard.html          # Weekly + all-time tabs
+    ├── 404.html
+    └── 500.html
+```
 
-## Installation
+---
 
-Clone the repository
+## ⚙️ Setup & Run (Step by Step)
 
-Navigate to the project folder
+### 1. Clone / Unzip the Project
 
+```bash
+# If you downloaded the zip:
+unzip ElevateAI_V2.zip
+cd ElevateAI_V2
+
+# OR if using git:
+git clone https://github.com/YOUR_USERNAME/ElevateAI.git
 cd ElevateAI
+```
 
-Install dependencies:
-pip install flask
-pip install flask_sqlalchemy
+### 2. Create Virtual Environment
 
-Run the application
+```bash
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
 
-Open the browser and visit
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-http://127.0.0.1:5000
+### 3. Install Dependencies
 
-## Usage
+```bash
+pip install -r requirements.txt
+```
 
-1. Create a new account using the Signup page
-2. Login to access the dashboard
-3. Select interview category (HR, Technical, Communication)
-4. Choose interview mode (Timed or Untimed)
-5. Answer questions and receive AI-style feedback
-6. View your score and interview statistics on the dashboard
+**What gets installed:**
 
-## Future Improvements
+| Package | Purpose |
+|---------|---------|
+| `flask` | Web framework |
+| `flask-sqlalchemy` | ORM / database layer |
+| `flask-mail` | Email sending (Gmail SMTP) |
+| `werkzeug` | Password hashing, file uploads |
+| `itsdangerous` | Secure tokens (email verify / password reset) |
+| `google-genai` | Google Gemini AI feedback |
 
-- AI answer evaluation using real AI models
-- Resume upload for personalized interview questions
-- Voice-based interview system
-- Leaderboard for top performers
-- Interview timer progress bar
-- Admin dashboard
+### 4. Configure Environment Variables
 
-## Author
+```bash
+# Copy the example file
+cp .env.example .env
+```
 
-**Suhas H N**
+Then open `.env` and fill in your values:
 
-GitHub:  
-https://github.com/Suhas-H-N
+```env
+SECRET_KEY=any_long_random_string_here
+FLASK_ENV=development
+
+# Gemini AI (free tier — get key from https://aistudio.google.com/app/apikey)
+GEMINI_API_KEY=AIzaSy...your_key_here
+
+# Gmail SMTP (optional — needed for email verification / forgot password)
+MAIL_USERNAME=yourgmail@gmail.com
+MAIL_PASSWORD=your_16_char_app_password
+```
+
+> **To run WITHOUT email / AI:** Leave `GEMINI_API_KEY` and `MAIL_*` blank.
+> The app falls back to rule-based feedback and skips email sending.
+
+### 5. Load Environment Variables
+
+```bash
+# macOS / Linux
+export $(cat .env | xargs)
+
+# Windows PowerShell
+Get-Content .env | ForEach-Object { $k,$v = $_ -split '=',2; [System.Environment]::SetEnvironmentVariable($k,$v) }
+```
+
+### 6. Run the App
+
+```bash
+python app.py
+```
+
+Open: **http://127.0.0.1:5000**
+
+---
+
+## 📦 Installing google-genai (Gemini AI)
+
+The new SDK replaces the deprecated `google-generativeai`:
+
+```bash
+pip install google-genai
+```
+
+Get your **free** API key: https://aistudio.google.com/app/apikey
+
+The free tier gives **15 requests/minute** and **1 million tokens/day** — more than enough for a student project.
+
+---
+
+## 📧 Setting Up Gmail for Email Features
+
+1. Go to your Google Account → **Security** → Enable **2-Step Verification**
+2. Go to **App Passwords** → Generate a password for "Mail"
+3. Copy the 16-character password into `MAIL_PASSWORD` in `.env`
+
+> If you skip this, signup still works — email verification is silently skipped.
+
+---
+
+## 🗄 Database Notes
+
+- SQLite database is auto-created at `instance/elevate_ai.db` on first run
+- To reset the database: delete `instance/elevate_ai.db` and restart
+- For production, switch to PostgreSQL by setting `DATABASE_URL=postgresql://...` in `.env`
+
+---
+
+## 🌐 REST API Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/stats` | Your total, best, avg score, streak | ✅ Required |
+| GET | `/api/leaderboard` | Top 10 users this week | ✅ Required |
+| GET | `/api/hint/<category>` | Hint framework for a category | ✅ Required |
+
+Example response for `/api/stats`:
+```json
+{
+  "total": 12,
+  "best": 100.0,
+  "avg": 83.3,
+  "streak": 5
+}
