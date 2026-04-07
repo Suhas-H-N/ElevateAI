@@ -1,79 +1,165 @@
 {% extends "base.html" %}
-
-{% block title %}Result - Elevate AI{% endblock %}
+{% block title %}Results — ElevateAI{% endblock %}
 
 {% block content %}
+{% if percentage == 100 %}
+<canvas id="confetti-canvas"></canvas>
+{% endif %}
 
-<div class="result-container">
+<div class="result-page">
+    <div class="result-wrap">
 
-    <div class="result-card">
+        <!-- ═══ SCORE HERO ═══ -->
+        <div class="score-hero">
+            <div style="font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);font-weight:700;margin-bottom:16px;">
+                Interview Complete
+            </div>
 
-        <!-- HEADER -->
-        <div class="result-header">
-            <h2>🎉 Interview Completed!</h2>
-            <p class="subtitle">
-                {{ category | capitalize }} • {{ mode | capitalize }}
-            </p>
+            <div class="score-num" id="scoreDisplay">0</div>
+            <div class="score-denom">/ {{ total }} questions</div>
+
+            <div class="perf-badge perf-{{ performance.cls }}">
+                {{ performance.icon }} {{ performance.label }}
+            </div>
+
+            <div class="score-tags">
+                <span class="tag">{{ meta.icon }} {{ meta.label }}</span>
+                <span class="tag">{{ difficulty_meta.icon }} {{ difficulty_meta.label }}</span>
+                <span class="tag font-mono">{{ percentage }}%</span>
+                {% if gemini_enabled %}<span class="ai-badge">✨ AI Evaluated</span>{% endif %}
+            </div>
         </div>
 
-        <!-- SCORE -->
-        <div class="score-box animate-score">
-            <span>Your Score</span>
-            <h1 id="scoreDisplay">0</h1>
-            <p class="score-total">out of {{ total }}</p>
+        <!-- ═══ AI FEEDBACK ═══ -->
+        <div class="card mt-16">
+            <div class="section-header mb-16">
+                <span class="section-title">
+                    {% if gemini_enabled %}✨ AI Feedback{% else %}📝 Feedback{% endif %}
+                </span>
+                <span class="tag">{{ feedback_with_qa | length }} answers</span>
+            </div>
+
+            <div class="feedback-list">
+                {% for f, q, ans in feedback_with_qa %}
+                <div class="feedback-item">
+                    <div class="feedback-icon">{{ f.icon }}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="feedback-q">Q{{ loop.index }}: {{ q }}</div>
+                        <div class="feedback-text">{{ f.feedback if f.feedback else f.text }}</div>
+
+                        {% if ans %}
+                        <div style="margin-top:8px;padding:8px 10px;background:var(--bg-code);border-radius:var(--radius-sm);font-size:0.8125rem;color:var(--text-secondary);font-style:italic;word-break:break-word;">
+                            "{{ ans[:160] }}{% if ans|length > 160 %}…{% endif %}"
+                        </div>
+                        {% endif %}
+
+                        <!-- AI-specific: keywords hit & missing -->
+                        {% if f.keywords_hit or f.missing_aspects %}
+                        <div class="keyword-list">
+                            {% for kw in f.keywords_hit %}
+                            <span class="keyword-tag keyword-hit">✓ {{ kw }}</span>
+                            {% endfor %}
+                            {% for kw in f.missing_aspects %}
+                            <span class="keyword-tag keyword-missing">✗ {{ kw }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- AI Score bar -->
+                        {% if f.score is defined %}
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+                            <span style="font-size:0.75rem;color:var(--text-muted);width:48px;">Score</span>
+                            <div style="flex:1;height:4px;background:var(--border);border-radius:100px;overflow:hidden;">
+                                <div style="height:100%;width:{{ (f.score / 10 * 100)|int }}%;background:{% if f.score >= 7 %}var(--success){% elif f.score >= 4 %}var(--warning){% else %}var(--danger){% endif %};border-radius:100px;transition:width 1s ease;"></div>
+                            </div>
+                            <span class="font-mono" style="font-size:0.75rem;color:var(--text-secondary);">{{ f.score }}/10</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
-        <!-- PERFORMANCE -->
-        <div class="performance-msg">
-            {% if score == total %}
-                <p class="excellent">🔥 Excellent! Perfect score!</p>
-            {% elif score >= total // 2 %}
-                <p class="good">👍 Good job! Keep improving.</p>
-            {% else %}
-                <p class="improve">⚡ Needs improvement. Practice more!</p>
-            {% endif %}
+        <!-- ═══ TIPS ═══ -->
+        {% if percentage < 75 %}
+        <div class="card mt-16" style="border-left:3px solid var(--brand);">
+            <div class="section-title mb-8">💡 How to Improve</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Use the <strong>STAR method</strong>: Situation → Task → Action → Result</li>
+                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Aim for <strong>3–5 sentences</strong> with real, specific examples</li>
+                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Always end with a <strong>measurable outcome</strong> — numbers make answers memorable</li>
+                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Try the <strong>speech mode</strong> 🎤 to practice speaking your answers out loud</li>
+            </ul>
         </div>
+        {% endif %}
 
-        <!-- FEEDBACK -->
-        <div class="feedback-section">
-            <h3>🤖 AI Feedback</h3>
-
-            {% if feedback_list %}
-                <ul class="feedback-list">
-                    {% for f in feedback_list %}
-                        <li class="fade-in">✔ {{ f }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="empty-text">No feedback available.</p>
-            {% endif %}
-        </div>
-
-        <!-- ACTIONS -->
+        <!-- ═══ ACTIONS ═══ -->
         <div class="result-actions">
-            <a href="/dashboard" class="dashboard-btn">← Dashboard</a>
-            <a href="/mode?category={{ category }}" class="retry-btn">🔁 Retry</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg">← Dashboard</a>
+            <a href="{{ url_for('answer_history', result_id=result_id) }}" class="btn btn-ghost btn-lg">📖 Review</a>
+            <a href="{{ url_for('mode', category=category) }}" class="btn btn-primary btn-lg">🔁 Try Again</a>
         </div>
 
     </div>
-
 </div>
+{% endblock %}
 
-<!-- ===== SCRIPT ===== -->
+{% block scripts %}
 <script>
-// Animated score counter
-let score = {{ score }};
-let total = {{ total }};
+// ── ANIMATED SCORE COUNTER ──
+const finalScore = {{ score }};
+const display    = document.getElementById('scoreDisplay');
 let current = 0;
+const steps = 40;
 
-let interval = setInterval(() => {
-    if (current >= score) {
-        clearInterval(interval);
-    } else {
-        current++;
-        document.getElementById("scoreDisplay").innerText = current + " / " + total;
+const counter = setInterval(() => {
+    current = Math.min(current + finalScore / steps, finalScore);
+    display.textContent = Math.round(current);
+    if (current >= finalScore) clearInterval(counter);
+}, 800 / steps);
+
+// ── CONFETTI (only on perfect score) ──
+{% if percentage == 100 %}
+(function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx    = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height= window.innerHeight;
+
+    const pieces = Array.from({length:150}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 150,
+        color: ['#6C63FF','#00D4AA','#FFB800','#FF6B6B','#0EA5E9'][Math.floor(Math.random()*5)],
+        tilt: Math.floor(Math.random()*10) - 10,
+        tiltAngle: 0,
+        tiltAngleInc: Math.random() * 0.07 + 0.05,
+    }));
+
+    let angle = 0, frame;
+
+    function draw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        angle += 0.01;
+        pieces.forEach(p => {
+            p.tiltAngle += p.tiltAngleInc;
+            p.y += (Math.cos(angle + p.d) + 1 + p.r / 2) * 1.2;
+            p.tilt = Math.sin(p.tiltAngle) * 15;
+            ctx.beginPath();
+            ctx.lineWidth = p.r / 2;
+            ctx.strokeStyle = p.color;
+            ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
+            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
+            ctx.stroke();
+            if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+        });
+        frame = requestAnimationFrame(draw);
     }
-}, 50);
+    draw();
+    setTimeout(() => { cancelAnimationFrame(frame); ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);
+})();
+{% endif %}
 </script>
-
 {% endblock %}
