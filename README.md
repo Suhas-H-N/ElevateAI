@@ -1,206 +1,305 @@
-# ElevateAI v2.0 — AI-Powered Interview Preparation Platform
+# ElevateAI — Premium AI Interview Platform
 
-> Final Year Project | Flask · SQLAlchemy · Gemini AI · Chart.js
+> Next.js 14 · Supabase · OpenAI/Anthropic · Tailwind CSS · Framer Motion
 
----
-
-## 🚀 What Is ElevateAI?
-
-ElevateAI is a full-stack web application that helps students and freshers prepare for job interviews through structured practice, AI-powered feedback, and real-time performance analytics.
+A production-ready, full-stack AI interview preparation platform with real-time streaming AI conversations, animated scorecards, resume optimization, and a premium dark UI.
 
 ---
 
-## ✅ Full Feature List
+## ✨ Feature Overview
 
 | Feature | Details |
 |---------|---------|
-| 🤖 **Gemini AI Feedback** | Semantic answer evaluation via Google Gemini 2.0 Flash — scores 0–10, detects keywords, suggests improvements |
-| 🎤 **Speech-to-Text** | Browser-native Web Speech API — speak your answers instead of typing |
-| 🔥 **Streak Tracker** | Daily practice streaks with banner on dashboard |
-| 🎯 **Radar Chart** | Spider chart showing HR / Technical / Communication strengths |
-| 📈 **Line Chart** | Score % over time via Chart.js |
-| 🏆 **Leaderboard** | Weekly + all-time top scorers (own page + dashboard preview) |
-| 📖 **Answer History** | Review every past Q&A with AI feedback, keyword tags, score bars |
-| ⏱ **Countdown Timer** | Per-question time limit (Easy 2min / Medium 3min / Hard 4min) — auto-submits |
-| 🏢 **Company Packs** | Amazon, Google, TCS, Infosys, Microsoft question sets |
-| 💡 **Hint System** | STAR / CAR framework hints shown on demand per category |
-| ✉️ **Email Verification** | Flask-Mail + Gmail SMTP — token verified on signup |
-| 🔑 **Forgot Password** | Token-based secure reset via email (1-hour expiry) |
-| 📄 **Resume Upload** | PDF upload (max 5MB) stored per user |
-| 🌙 **Dark / Light Mode** | Persisted in localStorage |
-| 🏅 **Difficulty Levels** | Easy / Medium / Hard — different questions AND scoring thresholds |
-| 🔐 **Auth** | Hashed passwords (Werkzeug), session management, login guard |
-| 🌐 **REST API** | `/api/stats`, `/api/leaderboard`, `/api/hint/<category>` |
-| 🐳 **Docker Ready** | `.env.example` + `.gitignore` provided |
-| 📱 **Responsive** | Mobile-first layouts for all pages |
+| 🤖 **AI Interviewer** | Streaming GPT-4o-mini chat with role/difficulty/type configuration |
+| 🎤 **Speech-to-Text** | Browser Web Speech API — speak answers instead of typing |
+| 📊 **Animated Scorecard** | Communication, Technical, Structure, Confidence dimensions + keyword analysis |
+| 📄 **Resume Optimizer** | PDF upload → ATS match score + AI improvement suggestions |
+| 📈 **Progress Dashboard** | Recharts area chart, skill breakdown, streak tracking |
+| 🔐 **Auth** | Supabase Auth — Email/Password + Google + GitHub OAuth |
+| 🌐 **Edge-Ready API** | Streaming interview route on Vercel Edge Runtime |
+| 🎨 **Design System** | Deep Slate + Indigo palette, glassmorphism, Framer Motion transitions |
 
 ---
 
 ## 🗂 Project Structure
 
 ```
-ElevateAI/
-├── app.py                        # All Flask routes, models, AI logic
-├── requirements.txt
-├── .env.example                  # Copy to .env and fill values
-├── .gitignore
-├── README.md
-├── instance/
-│   └── elevate_ai.db             # SQLite database (auto-created, git-ignored)
-├── static/
-│   ├── style.css                 # Complete design system
-│   └── uploads/                  # Resume PDFs (git-ignored)
-└── templates/
-    ├── base.html                 # Navbar, flash, footer, theme toggle
-    ├── login.html
-    ├── signup.html               # Password strength meter + confirm field
-    ├── forgot_password.html
-    ├── reset_password.html
-    ├── profile_setup.html        # Resume upload + radio pills
-    ├── dashboard.html            # Stats, radar, line chart, leaderboard, streaks
-    ├── mode.html                 # Difficulty + company pack selection
-    ├── interview.html            # Speech-to-text, countdown timer, hint box
-    ├── result.html               # AI feedback, keyword tags, confetti on 100%
-    ├── history.html              # Past Q&A review with AI scores
-    ├── leaderboard.html          # Weekly + all-time tabs
-    ├── 404.html
-    └── 500.html
+elevate-ai/
+├── app/
+│   ├── layout.tsx              # Root layout — fonts, noise overlay, toaster
+│   ├── page.tsx                # Landing page
+│   ├── globals.css             # Design system: glass, cards, buttons, inputs
+│   ├── dashboard/
+│   │   ├── layout.tsx          # AppShell wrapper
+│   │   └── page.tsx            # Stats, charts, recent interviews
+│   ├── interview/
+│   │   └── page.tsx            # Setup → streaming AI chat
+│   ├── feedback/
+│   │   ├── page.tsx            # Scorecard list
+│   │   └── [id]/page.tsx       # Individual scorecard
+│   ├── resume/
+│   │   └── page.tsx            # PDF upload + AI analysis
+│   ├── auth/
+│   │   ├── login/page.tsx      # Email + OAuth login
+│   │   └── signup/page.tsx     # Signup with password strength
+│   └── api/
+│       ├── interview/stream/route.ts   # SSE streaming AI interviewer
+│       ├── scorecard/route.ts          # Scorecard generation
+│       ├── resume/analyze/route.ts     # PDF parse + AI analysis
+│       └── auth/callback/route.ts      # Supabase OAuth callback
+│
+├── components/
+│   ├── layout/
+│   │   ├── Sidebar.tsx         # Collapsible sidebar with Framer Motion
+│   │   └── AppShell.tsx        # Authenticated page wrapper
+│   ├── ui/
+│   │   ├── ScoreRing.tsx       # Animated SVG score ring
+│   │   ├── SkeletonLoader.tsx  # Multiple skeleton variants
+│   │   └── Badge.tsx           # Badge, StatCard, EmptyState, ProgressBar
+│   ├── dashboard/
+│   │   └── PerformanceChart.tsx # Recharts area chart
+│   ├── interview/
+│   │   ├── InterviewChat.tsx   # Streaming chat + speech + typing indicator
+│   │   └── InterviewSetup.tsx  # Role/difficulty/type configuration UI
+│   ├── feedback/
+│   │   └── ScorecardView.tsx   # Full scorecard with collapsible Q breakdown
+│   └── resume/
+│       └── ResumeUploader.tsx  # Drag-drop PDF + job description + results
+│
+├── hooks/
+│   ├── useAuth.ts              # Supabase auth state
+│   └── useInterview.ts         # Interview session + streaming state
+│
+├── lib/
+│   ├── utils.ts                # cn(), formatDate, score helpers, labels
+│   ├── ai/
+│   │   ├── prompts.ts          # All AI system prompts
+│   │   └── client.ts           # OpenAI + Anthropic unified client
+│   └── supabase/
+│       ├── client.ts           # Browser client
+│       ├── server.ts           # Server client (SSR)
+│       └── middleware.ts       # Auth protection middleware
+│
+├── types/index.ts              # All TypeScript interfaces
+├── middleware.ts               # Next.js route protection
+├── supabase/schema.sql         # Full DB schema with RLS
+├── tailwind.config.ts          # Full design token system
+└── .env.local.example          # Environment variable template
 ```
 
 ---
 
-## ⚙️ Setup & Run (Step by Step)
+## ⚙️ Quick Start
 
-### 1. Clone / Unzip the Project
-
-```bash
-# If you downloaded the zip:
-unzip ElevateAI_V2.zip
-cd ElevateAI_V2
-
-# OR if using git:
-git clone https://github.com/YOUR_USERNAME/ElevateAI.git
-cd ElevateAI
-```
-
-### 2. Create Virtual Environment
+### 1. Clone & Install
 
 ```bash
-# Windows
-python -m venv .venv
-.venv\Scripts\activate
-
-# macOS / Linux
-python3 -m venv .venv
-source .venv/bin/activate
+git clone https://github.com/YOUR_USERNAME/elevate-ai.git
+cd elevate-ai
+npm install         # or: pnpm install / yarn install
 ```
 
-### 3. Install Dependencies
+### 2. Environment Variables
 
 ```bash
-pip install -r requirements.txt
+cp .env.local.example .env.local
 ```
 
-**What gets installed:**
+Open `.env.local` and fill in:
+
+```env
+# Supabase — from supabase.com → Project Settings → API
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+
+# AI — at least one required
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 3. Set Up Supabase
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Go to **SQL Editor** → paste the entire contents of `supabase/schema.sql` → Run
+3. In **Authentication → Providers**: enable Google and/or GitHub
+4. In **Authentication → URL Configuration**: add `http://localhost:3000/api/auth/callback` to Redirect URLs
+
+### 4. Run Locally
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🧠 AI Provider Setup
+
+### OpenAI (Recommended for interviews)
+- Get key: [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+- Uses: `gpt-4o-mini` (fast + cheap) for streaming interviews
+- Cost: ~$0.002–0.01 per interview session
+
+### Anthropic (Optional)
+- Get key: [console.anthropic.com](https://console.anthropic.com)
+- Uses: `claude-3-5-haiku-20241022` for scorecard generation
+- Swap provider in `lib/ai/client.ts` → `provider: "anthropic"`
+
+The app works with **either or both** providers. The API routes default to OpenAI but gracefully fall back.
+
+---
+
+## 🚀 Deploy to Vercel
+
+```bash
+npm install -g vercel
+vercel
+
+# Set env vars in Vercel dashboard or via CLI:
+vercel env add OPENAI_API_KEY
+vercel env add NEXT_PUBLIC_SUPABASE_URL
+vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
+
+After deploying, update Supabase:
+- Auth → URL Configuration → add your `https://yourapp.vercel.app/api/auth/callback`
+
+---
+
+## 🐙 GitHub — Complete Commit Workflow
+
+### First Push
+
+```bash
+git init
+git add .
+git commit -m "feat: initial ElevateAI boilerplate — Next.js 14 + Supabase + OpenAI"
+git remote add origin https://github.com/YOUR_USERNAME/elevate-ai.git
+git branch -M main
+git push -u origin main
+```
+
+### Feature Commits (for clean history)
+
+```bash
+# Config & types
+git add tailwind.config.ts types/ lib/utils.ts
+git commit -m "feat: design tokens, TypeScript types, utility helpers"
+git push
+
+# Supabase setup
+git add lib/supabase/ middleware.ts supabase/
+git commit -m "feat: Supabase client, server, middleware, RLS schema"
+git push
+
+# AI layer
+git add lib/ai/
+git commit -m "feat: AI prompts and unified OpenAI/Anthropic client"
+git push
+
+# Global styles & layout
+git add app/globals.css app/layout.tsx
+git commit -m "feat: global CSS design system, root layout with ambient glow"
+git push
+
+# Auth pages
+git add app/auth/ app/api/auth/
+git commit -m "feat: login & signup with email + Google + GitHub OAuth"
+git push
+
+# UI components
+git add components/ui/ components/layout/
+git commit -m "feat: ScoreRing, SkeletonLoader, Badge, StatCard, Sidebar, AppShell"
+git push
+
+# Dashboard
+git add app/dashboard/ components/dashboard/
+git commit -m "feat: dashboard — stats, area chart, skill breakdown, quick start"
+git push
+
+# AI Interview
+git add app/interview/ components/interview/ hooks/useInterview.ts app/api/interview/
+git commit -m "feat: AI interviewer — streaming chat, speech-to-text, setup wizard"
+git push
+
+# Scorecard / Feedback
+git add app/feedback/ components/feedback/ app/api/scorecard/
+git commit -m "feat: scorecard — animated rings, keyword analysis, Q&A breakdown"
+git push
+
+# Resume Optimizer
+git add app/resume/ components/resume/ app/api/resume/
+git commit -m "feat: resume optimizer — PDF upload, ATS score, AI suggestions"
+git push
+
+# Auth hook
+git add hooks/useAuth.ts
+git commit -m "feat: useAuth hook — Supabase session with real-time state"
+git push
+
+# README
+git add README.md
+git commit -m "docs: complete setup guide, API docs, deploy instructions"
+git push
+```
+
+---
+
+## 📦 Key Dependencies
 
 | Package | Purpose |
 |---------|---------|
-| `flask` | Web framework |
-| `flask-sqlalchemy` | ORM / database layer |
-| `flask-mail` | Email sending (Gmail SMTP) |
-| `werkzeug` | Password hashing, file uploads |
-| `itsdangerous` | Secure tokens (email verify / password reset) |
-| `google-genai` | Google Gemini AI feedback |
-
-### 4. Configure Environment Variables
-
-```bash
-# Copy the example file
-cp .env.example .env
-```
-
-Then open `.env` and fill in your values:
-
-```env
-SECRET_KEY=any_long_random_string_here
-FLASK_ENV=development
-
-# Gemini AI (free tier — get key from https://aistudio.google.com/app/apikey)
-GEMINI_API_KEY=AIzaSy...your_key_here
-
-# Gmail SMTP (optional — needed for email verification / forgot password)
-MAIL_USERNAME=yourgmail@gmail.com
-MAIL_PASSWORD=your_16_char_app_password
-```
-
-> **To run WITHOUT email / AI:** Leave `GEMINI_API_KEY` and `MAIL_*` blank.
-> The app falls back to rule-based feedback and skips email sending.
-
-### 5. Load Environment Variables
-
-```bash
-# macOS / Linux
-export $(cat .env | xargs)
-
-# Windows PowerShell
-Get-Content .env | ForEach-Object { $k,$v = $_ -split '=',2; [System.Environment]::SetEnvironmentVariable($k,$v) }
-```
-
-### 6. Run the App
-
-```bash
-python app.py
-```
-
-Open: **http://127.0.0.1:5000**
+| `next@14` | App Router, Server Components, Edge API routes |
+| `@supabase/supabase-js` + `@supabase/ssr` | Auth, database, RLS |
+| `openai` | Streaming GPT-4o-mini for interviews |
+| `@anthropic-ai/sdk` | Claude fallback for scorecard/resume |
+| `framer-motion` | Page transitions, sidebar, chat bubbles |
+| `recharts` | Dashboard area chart |
+| `react-dropzone` | PDF drag-and-drop upload |
+| `pdf-parse` | Server-side PDF text extraction |
+| `react-textarea-autosize` | Auto-growing chat input |
+| `react-hot-toast` | Styled toast notifications |
+| `lucide-react` | Icon system |
+| `clsx` + `tailwind-merge` | Safe class merging |
 
 ---
 
-## 📦 Installing google-genai (Gemini AI)
+## 🔧 Customization Guide
 
-The new SDK replaces the deprecated `google-generativeai`:
-
-```bash
-pip install google-genai
+### Swap AI model
+In `app/api/interview/stream/route.ts`:
+```ts
+model: "gpt-4o",          // upgrade from gpt-4o-mini
+model: "gpt-3.5-turbo",   // cheapest option
 ```
 
-Get your **free** API key: https://aistudio.google.com/app/apikey
+### Add a new interview role
+In `types/index.ts`:
+```ts
+export type Role = "... " | "your-new-role";
+```
+In `lib/utils.ts` → `ROLE_LABELS`, add the display name.
+In `components/interview/InterviewSetup.tsx` → `ROLES` array, add emoji + value.
 
-The free tier gives **15 requests/minute** and **1 million tokens/day** — more than enough for a student project.
-
----
-
-## 📧 Setting Up Gmail for Email Features
-
-1. Go to your Google Account → **Security** → Enable **2-Step Verification**
-2. Go to **App Passwords** → Generate a password for "Mail"
-3. Copy the 16-character password into `MAIL_PASSWORD` in `.env`
-
-> If you skip this, signup still works — email verification is silently skipped.
+### Change color accent
+In `tailwind.config.ts`, update the `indigo` values to your brand color.
+In `app/globals.css`, update `--accent`.
 
 ---
 
-## 🗄 Database Notes
+## 🗺 Roadmap
 
-- SQLite database is auto-created at `instance/elevate_ai.db` on first run
-- To reset the database: delete `instance/elevate_ai.db` and restart
-- For production, switch to PostgreSQL by setting `DATABASE_URL=postgresql://...` in `.env`
+- [ ] Video interview mode (WebRTC)
+- [ ] Company-specific question packs
+- [ ] Team/enterprise workspace
+- [ ] Stripe billing integration
+- [ ] PostgreSQL full-text search for question bank
+- [ ] Mobile app (React Native)
 
 ---
 
-## 🌐 REST API Endpoints
-
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/stats` | Your total, best, avg score, streak | ✅ Required |
-| GET | `/api/leaderboard` | Top 10 users this week | ✅ Required |
-| GET | `/api/hint/<category>` | Hint framework for a category | ✅ Required |
-
-Example response for `/api/stats`:
-```json
-{
-  "total": 12,
-  "best": 100.0,
-  "avg": 83.3,
-  "streak": 5
-}
+*Built with Next.js 14 and 💜 — Final Year Project 2026*
