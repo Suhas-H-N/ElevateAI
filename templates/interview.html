@@ -12,7 +12,7 @@
                 &nbsp;·&nbsp;
                 <span style="color:var(--text-muted)">{{ difficulty_meta.icon }} {{ difficulty_meta.label }}</span>
             </div>
-            <div class="meta-badge timer-badge">
+            <div class="meta-badge timer-badge" id="timerBadge">
                 ⏱ <span id="timerDisplay">00:00</span>
             </div>
         </div>
@@ -23,17 +23,30 @@
         </div>
 
         <div class="card">
-
-            <!-- Question number -->
             <div class="q-number">Question {{ current }} of {{ total }}</div>
-
-            <!-- Question text -->
             <div class="q-text">{{ question }}</div>
 
-            <!-- STAR method hint -->
+            <!-- Aptitude expected answer hint -->
+            {% if apt_answer %}
+            <div class="apt-expected">
+                <strong>📐 Guide:</strong> After answering, you can check:
+                <em>{{ apt_answer }}</em>
+            </div>
+            {% endif %}
+
+            <!-- STAR hint (for non-aptitude) -->
+            {% if category != 'aptitude' %}
             <div class="star-hint">
                 <strong>STAR method:</strong>
                 <strong>S</strong>ituation → <strong>T</strong>ask → <strong>A</strong>ction → <strong>R</strong>esult
+            </div>
+            {% endif %}
+
+            <!-- Hint box -->
+            <div class="hint-box" id="hintBox">
+                <div class="hint-framework">💡 Hint for this question</div>
+                <ul class="hint-steps" id="hintSteps"></ul>
+                <p class="hint-tip" id="hintTip"></p>
             </div>
 
             <!-- Answer form -->
@@ -42,29 +55,52 @@
                     class="field-textarea"
                     id="answerBox"
                     name="answer"
-                    placeholder="Type your answer here… Be specific and give real examples."
-                    required
+                    placeholder="Type your answer here… Be specific with real examples."
                     rows="6"
                 ></textarea>
 
                 <div class="answer-controls">
                     <span class="word-counter" id="wordCounter">0 words</span>
-                    <span style="font-size:0.75rem;color:var(--text-muted);">Target: {{ difficulty_meta.label }} level</span>
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        {% if category != 'aptitude' %}
+                        <button type="button" class="speech-btn" id="speechBtn" title="Click to speak your answer">
+                            🎤 <span id="speechLabel">Speak</span>
+                        </button>
+                        {% endif %}
+                        <button type="button" class="btn btn-ghost" id="hintBtn" style="padding:7px 14px;font-size:0.8rem;">
+                            💡 Hint
+                        </button>
+                    </div>
                 </div>
 
                 <div class="interview-actions mt-16">
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">✕ Exit Interview</a>
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        {% if current == total %}
-                            Finish &amp; See Results →
-                        {% else %}
-                            Next Question →
-                        {% endif %}
-                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost" id="exitBtn">✕ Exit</a>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <button type="submit" name="answer" value="" class="btn btn-ghost" style="font-size:0.85rem;" onclick="window.onbeforeunload=null;">
+                            Skip →
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" onclick="window.onbeforeunload=null;">
+                            {% if current == total %}Finish &amp; See Results →{% else %}Next Question →{% endif %}
+                        </button>
+                    </div>
                 </div>
             </form>
 
         </div>
+
+        <!-- Tips sidebar-style -->
+        {% if tips %}
+        <div style="margin-top:16px;padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--brand);font-weight:700;margin-bottom:10px;">
+                Pro Tips for {{ meta.label }}
+            </div>
+            {% for tip in tips[:2] %}
+            <div style="font-size:0.8125rem;color:var(--text-secondary);padding:4px 0 4px 16px;position:relative;">
+                <span style="position:absolute;left:0;color:var(--brand);">→</span>{{ tip }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
     </div>
 </div>
@@ -75,20 +111,21 @@
 // ── TIMER ──
 let seconds = 0;
 const timerEl = document.getElementById('timerDisplay');
+const timerBadge = document.getElementById('timerBadge');
 const timerId = setInterval(() => {
     seconds++;
     const m = String(Math.floor(seconds / 60)).padStart(2, '0');
     const s = String(seconds % 60).padStart(2, '0');
     timerEl.textContent = `${m}:${s}`;
+    // Warn at 3 minutes
+    if (seconds >= 180) timerBadge.classList.add('warn');
 }, 1000);
 
 // ── WORD COUNT ──
 const textarea = document.getElementById('answerBox');
-const counter = document.getElementById('wordCounter');
-
+const counter  = document.getElementById('wordCounter');
 const thresholds = { easy: 10, medium: 20, hard: 35 };
-const difficulty = '{{ difficulty_meta.label | lower }}';
-const target = thresholds[difficulty] || 20;
+const target = thresholds['{{ difficulty_meta.label | lower }}'] || 20;
 
 textarea.addEventListener('input', () => {
     const words = textarea.value.trim() ? textarea.value.trim().split(/\s+/) : [];
@@ -96,7 +133,7 @@ textarea.addEventListener('input', () => {
     counter.textContent = `${n} word${n !== 1 ? 's' : ''}`;
     counter.className = 'word-counter';
     if (n >= target * 1.5) counter.classList.add('great');
-    else if (n >= target) counter.classList.add('good');
+    else if (n >= target)  counter.classList.add('good');
 });
 
 // ── AUTO FOCUS ──
@@ -104,16 +141,100 @@ window.addEventListener('DOMContentLoaded', () => textarea.focus());
 
 // ── PREVENT ACCIDENTAL EXIT ──
 window.addEventListener('beforeunload', (e) => {
+    if (textarea.value.trim().length > 0) { e.preventDefault(); e.returnValue = ''; }
+});
+document.getElementById('exitBtn').addEventListener('click', (e) => {
     if (textarea.value.trim().length > 0) {
-        e.preventDefault();
-        e.returnValue = '';
+        if (!confirm('You have an answer typed. Are you sure you want to exit?')) e.preventDefault();
+        else window.onbeforeunload = null;
     }
 });
-
-// Clear beforeunload on intentional submit
 document.getElementById('answerForm').addEventListener('submit', () => {
-    clearInterval(timerId);
-    window.onbeforeunload = null;
+    clearInterval(timerId); window.onbeforeunload = null;
+});
+
+// ── SPEECH-TO-TEXT ──
+const speechBtn = document.getElementById('speechBtn');
+const speechLabel = document.getElementById('speechLabel');
+if (speechBtn && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+    let isRecording = false;
+    let transcript = '';
+
+    recognition.onresult = (e) => {
+        let interim = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) transcript += e.results[i][0].transcript + ' ';
+            else interim = e.results[i][0].transcript;
+        }
+        textarea.value = transcript + interim;
+        textarea.dispatchEvent(new Event('input'));
+    };
+    recognition.onend = () => {
+        isRecording = false;
+        speechBtn.classList.remove('recording');
+        speechLabel.textContent = 'Speak';
+        transcript = textarea.value;
+    };
+    recognition.onerror = () => recognition.onend();
+
+    speechBtn.addEventListener('click', () => {
+        if (isRecording) { recognition.stop(); return; }
+        transcript = textarea.value;
+        isRecording = true;
+        speechBtn.classList.add('recording');
+        speechLabel.textContent = 'Recording…';
+        recognition.start();
+    });
+} else if (speechBtn) {
+    speechBtn.style.display = 'none';
+}
+
+// ── HINTS ──
+const HINTS = {
+    hr: [
+        "Think of a specific real experience from college, internship, or project.",
+        "Structure: What happened (S/T) → What you did (A) → What changed (R)",
+        "End with a measurable outcome or lesson learned."
+    ],
+    technical: [
+        "Define the concept clearly first, then give a real-world example.",
+        "Mention trade-offs or alternatives where applicable.",
+        "If designing a system, think: scale → components → data flow."
+    ],
+    communication: [
+        "Give a specific example — avoid vague claims like 'I always communicate well'.",
+        "Show empathy: acknowledge other perspectives in your answer.",
+        "End with what you learned or how it improved the situation."
+    ],
+    aptitude: [
+        "Identify the type of problem: time-work, ratio, speed-distance, or series.",
+        "Write down knowns and unknowns before calculating.",
+        "Check your answer by substituting back into the problem."
+    ]
+};
+
+const category = '{{ category }}';
+const hintBtn = document.getElementById('hintBtn');
+const hintBox = document.getElementById('hintBox');
+const hintSteps = document.getElementById('hintSteps');
+const hintTip = document.getElementById('hintTip');
+
+hintBtn.addEventListener('click', () => {
+    if (hintBox.classList.contains('visible')) {
+        hintBox.classList.remove('visible');
+        hintBtn.textContent = '💡 Hint';
+        return;
+    }
+    const hints = HINTS[category] || HINTS.hr;
+    hintSteps.innerHTML = hints.slice(0, 2).map(h => `<li>${h}</li>`).join('');
+    hintTip.textContent = hints[2] || '';
+    hintBox.classList.add('visible');
+    hintBtn.textContent = '✕ Hide';
 });
 </script>
 {% endblock %}
