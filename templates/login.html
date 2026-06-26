@@ -14,24 +14,15 @@
         </div>
 
         <h1 class="auth-title">Welcome back</h1>
-        <p class="auth-sub">Sign in to continue your interview prep</p>
+        <p class="auth-sub">Sign in to continue your interview prep journey</p>
 
         <form method="POST" action="{{ url_for('login') }}" autocomplete="on">
-
             <div class="field">
                 <label class="field-label" for="username">Username</label>
                 <div class="input-wrap has-icon">
                     <span class="input-icon">@</span>
-                    <input
-                        class="field-input"
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="your_username"
-                        required
-                        autocomplete="username"
-                        autofocus
-                    >
+                    <input class="field-input" type="text" id="username" name="username"
+                           placeholder="your_username" required autocomplete="username" autofocus>
                 </div>
             </div>
 
@@ -39,28 +30,24 @@
                 <label class="field-label" for="password">Password</label>
                 <div class="input-wrap has-icon">
                     <span class="input-icon">🔒</span>
-                    <input
-                        class="field-input"
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                    >
-                    <button type="button" class="eye-toggle" onclick="togglePwd('password', this)" aria-label="Show/hide password">👁</button>
+                    <input class="field-input" type="password" id="password" name="password"
+                           placeholder="Enter your password" required autocomplete="current-password">
+                    <button type="button" class="eye-toggle" onclick="togglePwd('password',this)" aria-label="Show password">👁</button>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg btn-full mt-24">
-                Sign In →
-            </button>
-
+            <button type="submit" class="btn btn-primary btn-lg btn-full mt-24">Sign In →</button>
         </form>
 
-        <div class="auth-footer mt-16">
+        <div class="divider">or</div>
+
+        <div style="text-align:center;font-size:0.875rem;color:var(--text-muted);">
             New to ElevateAI?
-            <a href="{{ url_for('signup') }}">Create an account</a>
+            <a href="{{ url_for('signup') }}" style="font-weight:600;">Create a free account</a>
+        </div>
+
+        <div style="margin-top:12px;text-align:center;font-size:0.8125rem;">
+            <a href="{{ url_for('reset_password') }}" style="color:var(--text-muted);">Forgot password? Change it here</a>
         </div>
 
     </div>
@@ -71,13 +58,8 @@
 <script>
 function togglePwd(id, btn) {
     const input = document.getElementById(id);
-    if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = '🙈';
-    } else {
-        input.type = 'password';
-        btn.textContent = '👁';
-    }
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.textContent = input.type === 'password' ? '👁' : '🙈';
 }
 </script>
 {% endblock %}
