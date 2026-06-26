@@ -4,19 +4,31 @@
 {% block content %}
 <div class="container">
 
-    <!-- ═══ HEADER ═══ -->
+    <!-- HEADER -->
     <div class="dash-header">
         <h1 class="dash-title">
             {% if user.name %}Hello, {{ user.name.split()[0] }} 👋{% else %}Dashboard{% endif %}
         </h1>
-        <p class="dash-sub">Track your performance and keep improving your interview skills.</p>
+        <p class="dash-sub">Track your progress, start a new interview, and keep improving.</p>
     </div>
 
-    <!-- ═══ STATS ═══ -->
+    <!-- STREAK BANNER -->
+    {% if streak > 0 %}
+    <div class="streak-banner">
+        <span class="streak-flame">🔥</span>
+        <div>
+            <div class="streak-text">Day Streak!</div>
+            <div class="streak-sub">Keep practising daily to maintain your streak</div>
+        </div>
+        <span class="streak-count">{{ streak }}</span>
+    </div>
+    {% endif %}
+
+    <!-- STATS -->
     <div class="stats-row">
         <div class="stat-card stat-card-1">
             <div class="stat-label">Total Attempts</div>
-            <div class="stat-value">{{ total_attempts }}</div>
+            <div class="stat-value" id="animTotal">{{ total_attempts }}</div>
         </div>
         <div class="stat-card stat-card-2">
             <div class="stat-label">Best Score</div>
@@ -26,14 +38,28 @@
             <div class="stat-label">Average Score</div>
             <div class="stat-value">{{ avg_score }}<span class="stat-suffix">%</span></div>
         </div>
+        <div class="stat-card stat-card-4">
+            <div class="stat-label">Day Streak 🔥</div>
+            <div class="stat-value">{{ streak }}</div>
+        </div>
+    </div>
+
+    <!-- DAILY TIP -->
+    <div class="tip-banner mb-24">
+        <span class="tip-icon">💡</span>
+        <div>
+            <div class="tip-label">Daily Tip</div>
+            <div class="tip-text">{{ daily_tip }}</div>
+        </div>
     </div>
 
     <div class="dash-grid">
 
-        <!-- ═══ PERFORMANCE CHART ═══ -->
+        <!-- PERFORMANCE CHART -->
         <div class="card">
             <div class="section-header">
                 <span class="section-title">📈 Performance Over Time</span>
+                {% if results %}<span class="tag">{{ total_attempts }} session{{ 's' if total_attempts != 1 }}</span>{% endif %}
             </div>
             {% if chart_scores %}
             <div class="chart-wrap">
@@ -42,110 +68,74 @@
             {% else %}
             <div class="empty-state">
                 <div class="empty-state-icon">📊</div>
-                <p class="empty-state-text">No data yet — complete your first interview below!</p>
+                <p class="empty-state-text">Complete your first interview to see your chart!</p>
             </div>
             {% endif %}
         </div>
 
-        <!-- ═══ START INTERVIEW ═══ -->
+        <!-- SKILL RADAR -->
+        <div class="card">
+            <div class="section-header">
+                <span class="section-title">🎯 Skill Breakdown</span>
+            </div>
+            {% if results %}
+            <div class="radar-wrap">
+                <canvas id="radarChart" aria-label="Skill radar"></canvas>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">🎯</div>
+                <p class="empty-state-text">Complete interviews in different categories to see your skill radar.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- START INTERVIEW -->
         <div class="card">
             <div class="section-header">
                 <span class="section-title">🚀 Start New Interview</span>
             </div>
             <div class="cat-grid">
-                <a href="{{ url_for('mode', category='hr') }}" class="cat-btn"
-                   style="--cat-color: {{ category_meta.hr.color }}">
-                    <div class="cat-icon">👔</div>
+                {% for cat_key, cat_val in category_meta.items() %}
+                <a href="{{ url_for('mode', category=cat_key) }}" class="cat-btn" style="--cat-color: {{ cat_val.color }}">
+                    <div class="cat-icon">{{ cat_val.icon }}</div>
                     <div>
-                        <div class="cat-name">HR Round</div>
-                        <div class="cat-desc">Behavioral &amp; personality</div>
+                        <div class="cat-name">{{ cat_val.label }}</div>
+                        <div class="cat-desc">{{ cat_val.description }}</div>
+                        {% if cat_key in category_averages %}
+                        <div class="tag" style="margin-top:6px;font-size:0.7rem;">Avg: {{ category_averages[cat_key] }}%</div>
+                        {% endif %}
                     </div>
-                    {% if 'hr' in category_averages %}
-                    <div class="tag" style="margin-top:4px;">Avg: {{ category_averages.hr }}%</div>
-                    {% endif %}
                 </a>
-                <a href="{{ url_for('mode', category='technical') }}" class="cat-btn"
-                   style="--cat-color: {{ category_meta.technical.color }}">
-                    <div class="cat-icon">⚙️</div>
-                    <div>
-                        <div class="cat-name">Technical</div>
-                        <div class="cat-desc">Core CS &amp; engineering</div>
-                    </div>
-                    {% if 'technical' in category_averages %}
-                    <div class="tag" style="margin-top:4px;">Avg: {{ category_averages.technical }}%</div>
-                    {% endif %}
-                </a>
-                <a href="{{ url_for('mode', category='communication') }}" class="cat-btn"
-                   style="--cat-color: {{ category_meta.communication.color }}">
-                    <div class="cat-icon">💬</div>
-                    <div>
-                        <div class="cat-name">Communication</div>
-                        <div class="cat-desc">Soft skills &amp; situational</div>
-                    </div>
-                    {% if 'communication' in category_averages %}
-                    <div class="tag" style="margin-top:4px;">Avg: {{ category_averages.communication }}%</div>
-                    {% endif %}
-                </a>
+                {% endfor %}
             </div>
         </div>
 
-        <!-- ═══ PROFILE INFO ═══ -->
-        {% if user.name %}
+        <!-- COMPANY PACKS -->
         <div class="card">
             <div class="section-header">
-                <span class="section-title">👤 Your Profile</span>
-                <a href="{{ url_for('profile_setup') }}" class="btn btn-ghost" style="padding:6px 14px;font-size:0.8rem;">Edit</a>
+                <span class="section-title">🏢 Company Packs</span>
+                <span class="tag" style="font-size:0.7rem;">Focus mode</span>
             </div>
-            <div class="profile-grid">
-                {% if user.name %}
-                <div class="profile-item">
-                    <div class="profile-item-label">Full Name</div>
-                    <div class="profile-item-value">{{ user.name }}</div>
-                </div>
-                {% endif %}
-                {% if user.email %}
-                <div class="profile-item">
-                    <div class="profile-item-label">Email</div>
-                    <div class="profile-item-value">{{ user.email }}</div>
-                </div>
-                {% endif %}
-                {% if user.college %}
-                <div class="profile-item">
-                    <div class="profile-item-label">College</div>
-                    <div class="profile-item-value">{{ user.college }}</div>
-                </div>
-                {% endif %}
-                {% if user.degree and user.branch %}
-                <div class="profile-item">
-                    <div class="profile-item-label">Program</div>
-                    <div class="profile-item-value">{{ user.degree }} · {{ user.branch }}</div>
-                </div>
-                {% endif %}
-                {% if user.year_of_study %}
-                <div class="profile-item">
-                    <div class="profile-item-label">Year</div>
-                    <div class="profile-item-value">{{ user.year_of_study }}</div>
-                </div>
-                {% endif %}
-                {% if user.profession %}
-                <div class="profile-item">
-                    <div class="profile-item-label">Profession</div>
-                    <div class="profile-item-value">{{ user.profession }}</div>
-                </div>
-                {% endif %}
+            <div class="pack-grid">
+                {% for pack in company_packs %}
+                <a href="{{ url_for('mode', category=pack.category) }}" class="pack-btn">
+                    <span class="pack-icon">{{ pack.icon }}</span>
+                    <div>
+                        <div class="pack-name">{{ pack.name }}</div>
+                        <div class="pack-desc">{{ pack.desc }}</div>
+                    </div>
+                </a>
+                {% endfor %}
             </div>
         </div>
-        {% endif %}
 
-        <!-- ═══ HISTORY ═══ -->
+        <!-- HISTORY -->
         <div class="card">
             <div class="section-header">
                 <span class="section-title">📋 Interview History</span>
-                {% if results %}
-                <span class="tag">{{ total_attempts }} session{{ 's' if total_attempts != 1 }}</span>
-                {% endif %}
+                {% if results %}<span class="tag">{{ total_attempts }} session{{ 's' if total_attempts != 1 }}</span>{% endif %}
             </div>
-
             {% if results %}
             <div class="history-list">
                 {% for r in results | reverse %}
@@ -153,22 +143,20 @@
                 {% set badge_cls = 'badge-excellent' if pct >= 75 else ('badge-good' if pct >= 50 else 'badge-poor') %}
                 <div class="history-item">
                     <div class="history-left">
-                        <div class="history-dot"
-                             style="background: {{ category_meta[r.category].color if r.category in category_meta else 'var(--brand)' }}">
-                        </div>
+                        <div class="history-dot" style="background: {{ category_meta[r.category].color if r.category in category_meta else 'var(--brand)' }}"></div>
                         <div>
                             <div class="history-name">
                                 {{ category_meta[r.category].icon if r.category in category_meta else '📝' }}
                                 {{ r.category | capitalize }}
-                                <span class="tag" style="margin-left:6px;">
-                                    {{ difficulty_meta[r.difficulty].icon if r.difficulty in difficulty_meta else '·' }}
-                                    {{ r.difficulty | capitalize }}
-                                </span>
+                                <span class="tag" style="margin-left:4px;font-size:0.7rem;">{{ difficulty_meta[r.difficulty].icon if r.difficulty in difficulty_meta else '' }} {{ r.difficulty | capitalize }}</span>
                             </div>
                             <div class="history-meta">{{ r.date.strftime('%d %b %Y · %H:%M') }}</div>
                         </div>
                     </div>
-                    <span class="score-badge {{ badge_cls }}">{{ r.score }}/{{ r.total }} · {{ r.percentage }}%</span>
+                    <div class="history-actions">
+                        <span class="score-badge {{ badge_cls }}">{{ r.score }}/{{ r.total }} · {{ r.percentage }}%</span>
+                        <a href="{{ url_for('answer_history', result_id=r.id) }}" class="history-review-btn">Review</a>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -180,76 +168,162 @@
             {% endif %}
         </div>
 
+        <!-- LEADERBOARD -->
+        <div class="card">
+            <div class="section-header">
+                <span class="section-title">🏆 Leaderboard</span>
+                <span class="tag">Top 10</span>
+            </div>
+            {% if leaderboard %}
+            <table class="lb-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Avg</th>
+                        <th>Sessions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                    <tr {% if entry.username == current_username %}class="lb-me"{% endif %}>
+                        <td class="lb-rank {{ 'gold' if loop.index == 1 else ('silver' if loop.index == 2 else ('bronze' if loop.index == 3 else '')) }}">
+                            {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+                        </td>
+                        <td>
+                            <span style="font-weight:600;">{{ entry.name }}</span>
+                            {% if entry.username == current_username %}<span class="verified-badge" style="margin-left:6px;">You</span>{% endif %}
+                        </td>
+                        <td class="font-mono" style="font-weight:700;color:var(--brand);">{{ entry.avg }}%</td>
+                        <td style="color:var(--text-muted);">{{ entry.attempts }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">🏆</div>
+                <p class="empty-state-text">Complete interviews to appear on the leaderboard!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- PROFILE -->
+        {% if user.name %}
+        <div class="card full-width">
+            <div class="section-header">
+                <span class="section-title">👤 Your Profile</span>
+                <a href="{{ url_for('profile_setup') }}" class="btn btn-ghost" style="padding:6px 14px;font-size:0.8rem;">Edit Profile</a>
+            </div>
+            <div class="profile-grid">
+                {% if user.name %}<div class="profile-item"><div class="profile-item-label">Full Name</div><div class="profile-item-value">{{ user.name }}</div></div>{% endif %}
+                {% if user.email %}<div class="profile-item"><div class="profile-item-label">Email</div><div class="profile-item-value">{{ user.email }}</div></div>{% endif %}
+                {% if user.college %}<div class="profile-item"><div class="profile-item-label">College</div><div class="profile-item-value">{{ user.college }}</div></div>{% endif %}
+                {% if user.degree and user.branch %}<div class="profile-item"><div class="profile-item-label">Program</div><div class="profile-item-value">{{ user.degree }} · {{ user.branch }}</div></div>{% endif %}
+                {% if user.year_of_study %}<div class="profile-item"><div class="profile-item-label">Year</div><div class="profile-item-value">{{ user.year_of_study }}</div></div>{% endif %}
+                {% if user.profession %}<div class="profile-item"><div class="profile-item-label">Profession</div><div class="profile-item-value">{{ user.profession }}</div></div>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-{% if chart_scores %}
 <script>
-const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-const textColor = isDark ? '#A0A0C0' : '#5A5A7A';
+const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+const gc = () => isDark() ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+const tc = () => isDark() ? '#A0A0C0' : '#5A5A7A';
 
-const ctx = document.getElementById('perfChart').getContext('2d');
-const gradient = ctx.createLinearGradient(0, 0, 0, 260);
-gradient.addColorStop(0, 'rgba(108,99,255,0.3)');
-gradient.addColorStop(1, 'rgba(108,99,255,0)');
+{% if chart_scores %}
+(function() {
+    const ctx = document.getElementById('perfChart').getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+    gradient.addColorStop(0, 'rgba(108,99,255,0.3)');
+    gradient.addColorStop(1, 'rgba(108,99,255,0)');
 
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: {{ chart_labels | tojson }},
-        datasets: [{
-            label: 'Score %',
-            data: {{ chart_scores | tojson }},
-            borderColor: '#6C63FF',
-            backgroundColor: gradient,
-            borderWidth: 2.5,
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: '#6C63FF',
-            pointBorderColor: isDark ? '#14141F' : '#FFFFFF',
-            pointBorderWidth: 2,
-            pointRadius: 5,
-            pointHoverRadius: 7,
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                backgroundColor: isDark ? '#1A1A2E' : '#FFFFFF',
-                titleColor: isDark ? '#F0F0F8' : '#0D0D14',
-                bodyColor: isDark ? '#A0A0C0' : '#5A5A7A',
-                borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
-                borderWidth: 1,
-                padding: 12,
-                callbacks: {
-                    label: ctx => ` Score: ${ctx.parsed.y}%`
-                }
-            }
+    const catColors = { hr:'#6366F1', technical:'#0EA5E9', communication:'#10B981', aptitude:'#F59E0B' };
+    const chartCats = {{ chart_cats | tojson }};
+    const pointColors = chartCats.map(c => catColors[c] || '#6C63FF');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_labels | tojson }},
+            datasets: [{
+                label: 'Score %',
+                data: {{ chart_scores | tojson }},
+                borderColor: '#6C63FF',
+                backgroundColor: gradient,
+                borderWidth: 2.5,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: pointColors,
+                pointBorderColor: isDark() ? '#14141F' : '#FFFFFF',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }]
         },
-        scales: {
-            x: {
-                grid: { color: gridColor },
-                ticks: { color: textColor, font: { family: 'Sora', size: 11 } }
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark() ? '#1A1A2E' : '#FFFFFF',
+                    titleColor: isDark() ? '#F0F0F8' : '#0D0D14',
+                    bodyColor: tc(), borderColor: gc(), borderWidth: 1, padding: 12,
+                    callbacks: { label: c => ` Score: ${c.parsed.y}%` }
+                }
             },
-            y: {
-                min: 0, max: 100,
-                grid: { color: gridColor },
-                ticks: {
-                    color: textColor,
-                    font: { family: 'JetBrains Mono', size: 11 },
-                    callback: v => v + '%'
+            scales: {
+                x: { grid: { color: gc() }, ticks: { color: tc(), font: { family: 'Sora', size: 11 } } },
+                y: {
+                    min: 0, max: 100, grid: { color: gc() },
+                    ticks: { color: tc(), font: { family: 'JetBrains Mono', size: 11 }, callback: v => v + '%' }
                 }
             }
         }
-    }
-});
-</script>
+    });
+})();
 {% endif %}
+
+{% if results %}
+(function() {
+    const rctx = document.getElementById('radarChart');
+    if (!rctx) return;
+    new Chart(rctx.getContext('2d'), {
+        type: 'radar',
+        data: {
+            labels: {{ radar_labels | tojson }},
+            datasets: [{
+                label: 'Your Skills',
+                data: {{ radar_scores | tojson }},
+                borderColor: '#6C63FF',
+                backgroundColor: 'rgba(108,99,255,0.15)',
+                borderWidth: 2,
+                pointBackgroundColor: '#6C63FF',
+                pointBorderColor: isDark() ? '#14141F' : '#FFFFFF',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                r: {
+                    min: 0, max: 100,
+                    ticks: { color: tc(), backdropColor: 'transparent', stepSize: 25, font: { size: 10 } },
+                    grid: { color: gc() },
+                    pointLabels: { color: tc(), font: { size: 11, weight: '600' } }
+                }
+            }
+        }
+    });
+})();
+{% endif %}
+</script>
 {% endblock %}
