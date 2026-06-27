@@ -6,7 +6,7 @@
     <div class="mode-card">
 
         <div class="mode-header">
-            <div class="mode-icon" style="background: rgba({{ '108,99,255' if category == 'hr' else ('14,165,233' if category == 'technical' else '16,185,129') }}, 0.12);">
+            <div class="mode-icon" style="background: rgba({{ '99,102,241' if category == 'hr' else ('14,165,233' if category == 'technical' else ('16,185,129' if category == 'communication' else '245,158,11')) }}, 0.12);">
                 {{ meta.icon }}
             </div>
             <div>
@@ -15,46 +15,38 @@
             </div>
         </div>
 
-        <p class="text-muted mb-16" style="font-size:0.875rem;">
-            Select your difficulty level. Each level has different questions with varying depth expectations.
+        <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:24px;">
+            Choose your difficulty level. Questions are shuffled each session for variety.
         </p>
 
         <div class="diff-grid">
-            <a href="{{ url_for('interview', category=category, difficulty='easy') }}"
-               class="diff-btn"
-               style="--diff-color: {{ difficulty_meta.easy.color }}">
+            <a href="{{ url_for('interview', category=category, difficulty='easy') }}" class="diff-btn" style="--diff-color: {{ difficulty_meta.easy.color }}">
                 <div class="diff-dot"></div>
                 <div class="diff-label">Easy</div>
                 <div class="diff-detail">Beginner friendly<br>~10 words expected</div>
             </a>
-
-            <a href="{{ url_for('interview', category=category, difficulty='medium') }}"
-               class="diff-btn"
-               style="--diff-color: {{ difficulty_meta.medium.color }}">
+            <a href="{{ url_for('interview', category=category, difficulty='medium') }}" class="diff-btn" style="--diff-color: {{ difficulty_meta.medium.color }}">
                 <div class="diff-dot"></div>
                 <div class="diff-label">Medium</div>
                 <div class="diff-detail">Structured answers<br>~20 words expected</div>
             </a>
-
-            <a href="{{ url_for('interview', category=category, difficulty='hard') }}"
-               class="diff-btn"
-               style="--diff-color: {{ difficulty_meta.hard.color }}">
+            <a href="{{ url_for('interview', category=category, difficulty='hard') }}" class="diff-btn" style="--diff-color: {{ difficulty_meta.hard.color }}">
                 <div class="diff-dot"></div>
                 <div class="diff-label">Hard</div>
                 <div class="diff-detail">Detailed responses<br>~35 words expected</div>
             </a>
         </div>
 
-        <div style="margin-top:8px;padding:12px 14px;background:var(--bg-elevated);border-radius:var(--radius-md);border:1px solid var(--border);font-size:0.8125rem;color:var(--text-muted);">
-            💡 <strong style="color:var(--text-secondary)">Tip:</strong>
-            Use the <strong>STAR method</strong> — Situation, Task, Action, Result — to structure strong answers.
+        {% if tips %}
+        <div class="mode-tips">
+            <div class="mode-tips-title">💡 Tips for {{ meta.label }}</div>
+            {% for tip in tips %}
+            <div class="mode-tip-item">{{ tip }}</div>
+            {% endfor %}
         </div>
+        {% endif %}
 
-        <div class="mt-24">
-            <a href="{{ url_for('dashboard') }}" class="mode-back">
-                ← Back to Dashboard
-            </a>
-        </div>
+        <a href="{{ url_for('dashboard') }}" class="mode-back">← Back to Dashboard</a>
 
     </div>
 </div>
