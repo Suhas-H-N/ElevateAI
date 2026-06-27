@@ -6,23 +6,37 @@
     <div class="profile-setup-card">
 
         <div class="setup-header">
-            <h1 class="setup-title">Complete Your Profile</h1>
-            <p class="setup-sub">Help us personalise your interview experience. This information is only used to tailor your coaching.</p>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+                <div style="width:52px;height:52px;background:linear-gradient(135deg,var(--brand),var(--brand-light));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.3rem;flex-shrink:0;">
+                    {{ (user.name[0] | upper) if user.name else '👤' }}
+                </div>
+                <div>
+                    <div class="setup-title">Your Profile</div>
+                    <div class="setup-sub">Keep your profile updated to personalise your experience</div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span class="tag">@{{ user.username }}</span>
+                {% if user.profile_complete %}
+                <span class="verified-badge">✓ Complete</span>
+                {% else %}
+                <span style="padding:2px 10px;background:rgba(245,158,11,0.1);border-radius:100px;font-size:0.72rem;font-weight:700;color:var(--warning);">⚠ Incomplete</span>
+                {% endif %}
+            </div>
         </div>
 
-        <form method="POST" action="{{ url_for('profile_setup') }}">
+        <form method="POST" action="{{ url_for('profile_setup') }}" novalidate>
 
-            <!-- Personal Info -->
+            <!-- PERSONAL INFO -->
             <div class="form-section">
                 <div class="form-section-title">Personal Information</div>
                 <div class="form-row">
                     <div class="field">
-                        <label class="field-label" for="name">Full Name <span style="color:var(--danger)">*</span></label>
+                        <label class="field-label" for="name">Full Name *</label>
                         <div class="input-wrap has-icon">
                             <span class="input-icon">👤</span>
                             <input class="field-input" type="text" id="name" name="name"
-                                   placeholder="Your full name" required
-                                   value="{{ user.name or '' }}">
+                                   value="{{ user.name or '' }}" placeholder="Your full name" required>
                         </div>
                     </div>
                     <div class="field">
@@ -30,109 +44,111 @@
                         <div class="input-wrap has-icon">
                             <span class="input-icon">✉</span>
                             <input class="field-input" type="email" id="email" name="email"
-                                   placeholder="you@example.com"
-                                   value="{{ user.email or '' }}">
+                                   value="{{ user.email or '' }}" placeholder="you@example.com">
                         </div>
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="field">
                         <label class="field-label" for="dob">Date of Birth</label>
                         <div class="input-wrap has-icon">
-                            <span class="input-icon">📅</span>
+                            <span class="input-icon">🎂</span>
                             <input class="field-input" type="date" id="dob" name="dob"
-                                   value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}">
+                                   value="{{ user.dob.strftime('%Y-%m-%d') if user.dob else '' }}"
+                                   max="{{ now.strftime('%Y-%m-%d') if now is defined else '2010-12-31' }}">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="field-label" for="gender">Gender</label>
-                        <div class="input-wrap has-icon">
-                            <span class="input-icon">⚧</span>
-                            <select class="field-select" id="gender" name="gender">
-                                <option value="">Prefer not to say</option>
-                                {% for opt in ['Male', 'Female', 'Non-binary', 'Other'] %}
-                                <option value="{{ opt }}" {% if user.gender == opt %}selected{% endif %}>{{ opt }}</option>
-                                {% endfor %}
-                            </select>
+                        <label class="field-label">Gender</label>
+                        <div class="radio-group" style="padding-top:4px;">
+                            {% for g in ['Male','Female','Non-binary','Prefer not to say'] %}
+                            <div class="radio-pill">
+                                <input type="radio" id="g_{{ loop.index }}" name="gender" value="{{ g }}"
+                                       {{ 'checked' if user.gender == g }}>
+                                <label for="g_{{ loop.index }}">{{ g }}</label>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Academic Info -->
+            <!-- EDUCATION -->
             <div class="form-section">
-                <div class="form-section-title">Academic Details</div>
-                <div class="form-row-3">
-                    <div class="field">
-                        <label class="field-label" for="college">College / University</label>
-                        <div class="input-wrap has-icon">
-                            <span class="input-icon">🎓</span>
-                            <input class="field-input" type="text" id="college" name="college"
-                                   placeholder="e.g. VTU, MSRIT"
-                                   value="{{ user.college or '' }}">
-                        </div>
+                <div class="form-section-title">Education</div>
+
+                <div class="field">
+                    <label class="field-label" for="college">College / University</label>
+                    <div class="input-wrap has-icon">
+                        <span class="input-icon">🏫</span>
+                        <input class="field-input" type="text" id="college" name="college"
+                               value="{{ user.college or '' }}" placeholder="e.g. IIT Bombay">
                     </div>
+                </div>
+
+                <div class="form-row">
                     <div class="field">
                         <label class="field-label" for="degree">Degree</label>
                         <div class="input-wrap has-icon">
-                            <span class="input-icon">📜</span>
-                            <input class="field-input" type="text" id="degree" name="degree"
-                                   placeholder="e.g. BTech, BCA"
-                                   value="{{ user.degree or '' }}">
+                            <span class="input-icon">🎓</span>
+                            <select class="field-select" id="degree" name="degree" style="padding-left:42px;">
+                                <option value="">Select degree</option>
+                                {% for d in ['B.Tech','B.E.','BCA','B.Sc.','MCA','M.Tech','MBA','B.Com','BBA','Other'] %}
+                                <option value="{{ d }}" {{ 'selected' if user.degree == d }}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="field">
                         <label class="field-label" for="branch">Branch / Specialisation</label>
                         <div class="input-wrap has-icon">
-                            <span class="input-icon">🔬</span>
+                            <span class="input-icon">⚙️</span>
                             <input class="field-input" type="text" id="branch" name="branch"
-                                   placeholder="e.g. CSE, AI/ML"
-                                   value="{{ user.branch or '' }}">
+                                   value="{{ user.branch or '' }}" placeholder="e.g. Computer Science">
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Year of Study -->
-            <div class="form-section">
-                <div class="form-section-title">Year of Study</div>
-                <div class="radio-group">
-                    {% for yr in ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Final Year', 'Completed'] %}
-                    <div class="radio-pill">
-                        <input type="radio" id="yr_{{ loop.index }}" name="year_of_study" value="{{ yr }}"
-                               {% if user.year_of_study == yr %}checked{% endif %}>
-                        <label for="yr_{{ loop.index }}">{{ yr }}</label>
+                <div class="field">
+                    <label class="field-label">Year of Study</label>
+                    <div class="radio-group">
+                        {% for y in ['1st Year','2nd Year','3rd Year','4th Year','Postgraduate','Alumni'] %}
+                        <div class="radio-pill">
+                            <input type="radio" id="y_{{ loop.index }}" name="year_of_study" value="{{ y }}"
+                                   {{ 'checked' if user.year_of_study == y }}>
+                            <label for="y_{{ loop.index }}">{{ y }}</label>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
 
-            <!-- Profession -->
+            <!-- CAREER -->
             <div class="form-section">
-                <div class="form-section-title">Current Role</div>
-                <div class="radio-group">
-                    {% for prof in ['Student', 'Fresher', 'Developer', 'Working Professional', 'Other'] %}
-                    <div class="radio-pill">
-                        <input type="radio" id="prof_{{ loop.index }}" name="profession" value="{{ prof }}"
-                               {% if user.profession == prof %}checked{% endif %}>
-                        <label for="prof_{{ loop.index }}">{{ prof }}</label>
+                <div class="form-section-title">Career</div>
+                <div class="field">
+                    <label class="field-label">Current Status</label>
+                    <div class="radio-group">
+                        {% for p in ['Student','Fresher','Working Professional','Job Seeker','Freelancer','Entrepreneur'] %}
+                        <div class="radio-pill">
+                            <input type="radio" id="p_{{ loop.index }}" name="profession" value="{{ p }}"
+                                   {{ 'checked' if user.profession == p }}>
+                            <label for="p_{{ loop.index }}">{{ p }}</label>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
 
-            <!-- Submit -->
-            <div class="flex" style="gap:12px;justify-content:flex-end;margin-top:8px;">
-                {% if user.profile_complete %}
-                <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">Cancel</a>
-                {% endif %}
-                <button type="submit" class="btn btn-primary btn-lg">
-                    {% if user.profile_complete %}Save Changes{% else %}Complete Profile →{% endif %}
-                </button>
+            <!-- ACTIONS -->
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+                <button type="submit" class="btn btn-primary btn-lg">Save Profile →</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-ghost btn-lg">Cancel</a>
+                <a href="{{ url_for('reset_password') }}" class="btn btn-secondary btn-lg" style="margin-left:auto;">🔒 Change Password</a>
             </div>
 
         </form>
-
     </div>
 </div>
 {% endblock %}
