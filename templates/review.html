@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Review — ElevateAI{% endblock %}
+
+{% block content %}
+<div class="review-page">
+    <div class="review-wrap">
+
+        <!-- HEADER -->
+        <div class="review-header">
+            <div>
+                <div class="q-number" style="margin-bottom:6px;">Interview Review</div>
+                <div class="review-title">
+                    {{ meta.icon }} {{ meta.label }}
+                    <span class="tag" style="font-size:0.75rem;vertical-align:middle;margin-left:8px;">
+                        {{ difficulty_meta.icon }} {{ difficulty_meta.label }}
+                    </span>
+                </div>
+                <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;">
+                    {{ result.date.strftime('%d %B %Y · %H:%M') }}
+                </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+                <div style="font-size:2.25rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--brand);line-height:1;">
+                    {{ result.score }}/{{ result.total }}
+                </div>
+                <div class="perf-badge perf-{{ performance.cls }}" style="margin-top:6px;font-size:0.8rem;padding:5px 14px;">
+                    {{ performance.icon }} {{ performance.label }}
+                </div>
+            </div>
+        </div>
+
+        <!-- SCORE BAR -->
+        <div class="card" style="margin-bottom:20px;padding:20px 24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text-secondary);">Overall Score</span>
+                <span class="font-mono" style="font-weight:700;color:var(--brand);">{{ result.percentage }}%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:100px;overflow:hidden;">
+                <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--brand),var(--brand-light));border-radius:100px;transition:width 1s ease;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.75rem;color:var(--text-muted);">
+                <span>0%</span><span>50%</span><span>100%</span>
+            </div>
+        </div>
+
+        <!-- TIPS for improvement -->
+        {% if result.percentage < 75 and tips %}
+        <div style="padding:14px 18px;background:rgba(108,99,255,0.06);border:1px solid rgba(108,99,255,0.18);border-radius:var(--radius-lg);margin-bottom:20px;">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--brand);font-weight:700;margin-bottom:10px;">Tips to Improve</div>
+            {% for tip in tips %}
+            <div style="font-size:0.8125rem;color:var(--text-secondary);padding:3px 0 3px 16px;position:relative;">
+                <span style="position:absolute;left:0;color:var(--brand);">→</span>{{ tip }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Q&A LIST -->
+        <div class="history-qa">
+            {% for f, q, ans in feedback_with_qa %}
+            <div class="history-qa-item">
+                <div class="hq-header" onclick="toggleQA({{ loop.index }})">
+                    <span class="hq-num">Q{{ loop.index }}</span>
+                    <span class="hq-question">{{ q }}</span>
+                    <span style="font-size:1rem;margin-right:4px;">{{ f.icon }}</span>
+                    <span class="hq-toggle" id="toggle-{{ loop.index }}">▼</span>
+                </div>
+                <div class="hq-body" id="qa-body-{{ loop.index }}">
+                    <div>
+                        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);font-weight:700;margin-bottom:6px;">Your Answer</div>
+                        <div class="hq-answer">
+                            {% if ans %}"{{ ans }}"{% else %}<em style="color:var(--text-muted);">No answer provided</em>{% endif %}
+                        </div>
+                    </div>
+                    <div class="hq-feedback">
+                        <span class="hq-feedback-icon">{{ f.icon }}</span>
+                        <div>
+                            <div class="hq-feedback-text">{{ f.text }}</div>
+                            {% if f.get('keywords_hit') %}
+                            <div class="keyword-list" style="margin-top:8px;">
+                                {% for kw in f.keywords_hit[:5] %}
+                                <span class="keyword-tag keyword-hit">✓ {{ kw }}</span>
+                                {% endfor %}
+                                {% for kw in f.get('missing_aspects', [])[:3] %}
+                                <span class="keyword-tag keyword-missing">✗ {{ kw }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ACTIONS -->
+        <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg">← Dashboard</a>
+            <a href="{{ url_for('mode', category=result.category) }}" class="btn btn-primary btn-lg">🔁 Retry {{ meta.label }}</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Animate score bar
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.getElementById('scoreBar').style.width = '{{ result.percentage }}%';
+    }, 300);
+});
+
+// Toggle Q&A accordions
+function toggleQA(idx) {
+    const body   = document.getElementById('qa-body-' + idx);
+    const toggle = document.getElementById('toggle-' + idx);
+    const isOpen = body.style.display !== 'none';
+    body.style.display   = isOpen ? 'none'  : 'flex';
+    toggle.textContent   = isOpen ? '▼'     : '▲';
+    toggle.style.color   = isOpen ? 'var(--text-muted)' : 'var(--brand)';
+}
+
+// Start all open
+document.querySelectorAll('.hq-body').forEach(b => b.style.display = 'flex');
+</script>
+{% endblock %}
