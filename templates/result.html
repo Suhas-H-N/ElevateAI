@@ -2,17 +2,27 @@
 {% block title %}Results — ElevateAI{% endblock %}
 
 {% block content %}
-{% if percentage == 100 %}
-<canvas id="confetti-canvas"></canvas>
-{% endif %}
+{% if percentage == 100 %}<canvas id="confetti-canvas"></canvas>{% endif %}
 
 <div class="result-page">
     <div class="result-wrap">
 
-        <!-- ═══ SCORE HERO ═══ -->
+        <!-- SCORE HERO -->
         <div class="score-hero">
-            <div style="font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);font-weight:700;margin-bottom:16px;">
-                Interview Complete
+            <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:700;margin-bottom:12px;">
+                Interview Complete ✓
+            </div>
+
+            <!-- SVG Ring -->
+            <div class="score-ring-wrap">
+                <svg class="score-ring" viewBox="0 0 120 120">
+                    <circle class="score-ring-track" cx="60" cy="60" r="52"/>
+                    <circle class="score-ring-fill" id="ringFill" cx="60" cy="60" r="52"
+                        stroke-dasharray="326.7"
+                        stroke-dashoffset="326.7"
+                        stroke="{{ '#22C55E' if percentage >= 75 else ('#F59E0B' if percentage >= 50 else '#EF4444') }}"/>
+                    <text class="score-ring-text" x="60" y="65" text-anchor="middle" id="ringText">0%</text>
+                </svg>
             </div>
 
             <div class="score-num" id="scoreDisplay">0</div>
@@ -26,16 +36,13 @@
                 <span class="tag">{{ meta.icon }} {{ meta.label }}</span>
                 <span class="tag">{{ difficulty_meta.icon }} {{ difficulty_meta.label }}</span>
                 <span class="tag font-mono">{{ percentage }}%</span>
-                {% if gemini_enabled %}<span class="ai-badge">✨ AI Evaluated</span>{% endif %}
             </div>
         </div>
 
-        <!-- ═══ AI FEEDBACK ═══ -->
+        <!-- FEEDBACK -->
         <div class="card mt-16">
             <div class="section-header mb-16">
-                <span class="section-title">
-                    {% if gemini_enabled %}✨ AI Feedback{% else %}📝 Feedback{% endif %}
-                </span>
+                <span class="section-title">📝 Answer Feedback</span>
                 <span class="tag">{{ feedback_with_qa | length }} answers</span>
             </div>
 
@@ -45,34 +52,20 @@
                     <div class="feedback-icon">{{ f.icon }}</div>
                     <div style="flex:1;min-width:0;">
                         <div class="feedback-q">Q{{ loop.index }}: {{ q }}</div>
-                        <div class="feedback-text">{{ f.feedback if f.feedback else f.text }}</div>
+                        <div class="feedback-text">{{ f.text }}</div>
 
                         {% if ans %}
-                        <div style="margin-top:8px;padding:8px 10px;background:var(--bg-code);border-radius:var(--radius-sm);font-size:0.8125rem;color:var(--text-secondary);font-style:italic;word-break:break-word;">
-                            "{{ ans[:160] }}{% if ans|length > 160 %}…{% endif %}"
-                        </div>
+                        <div class="feedback-answer">"{{ ans[:200] }}{% if ans|length > 200 %}…{% endif %}"</div>
                         {% endif %}
 
-                        <!-- AI-specific: keywords hit & missing -->
-                        {% if f.keywords_hit or f.missing_aspects %}
+                        {% if f.keywords_hit %}
                         <div class="keyword-list">
-                            {% for kw in f.keywords_hit %}
+                            {% for kw in f.keywords_hit[:5] %}
                             <span class="keyword-tag keyword-hit">✓ {{ kw }}</span>
                             {% endfor %}
-                            {% for kw in f.missing_aspects %}
+                            {% for kw in f.get('missing_aspects', [])[:3] %}
                             <span class="keyword-tag keyword-missing">✗ {{ kw }}</span>
                             {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        <!-- AI Score bar -->
-                        {% if f.score is defined %}
-                        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
-                            <span style="font-size:0.75rem;color:var(--text-muted);width:48px;">Score</span>
-                            <div style="flex:1;height:4px;background:var(--border);border-radius:100px;overflow:hidden;">
-                                <div style="height:100%;width:{{ (f.score / 10 * 100)|int }}%;background:{% if f.score >= 7 %}var(--success){% elif f.score >= 4 %}var(--warning){% else %}var(--danger){% endif %};border-radius:100px;transition:width 1s ease;"></div>
-                            </div>
-                            <span class="font-mono" style="font-size:0.75rem;color:var(--text-secondary);">{{ f.score }}/10</span>
                         </div>
                         {% endif %}
                     </div>
@@ -81,23 +74,25 @@
             </div>
         </div>
 
-        <!-- ═══ TIPS ═══ -->
-        {% if percentage < 75 %}
-        <div class="card mt-16" style="border-left:3px solid var(--brand);">
-            <div class="section-title mb-8">💡 How to Improve</div>
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
-                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Use the <strong>STAR method</strong>: Situation → Task → Action → Result</li>
-                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Aim for <strong>3–5 sentences</strong> with real, specific examples</li>
-                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Always end with a <strong>measurable outcome</strong> — numbers make answers memorable</li>
-                <li style="font-size:0.875rem;color:var(--text-secondary);">⚡ Try the <strong>speech mode</strong> 🎤 to practice speaking your answers out loud</li>
+        <!-- IMPROVE TIPS -->
+        {% if percentage < 75 and tips %}
+        <div class="improve-card">
+            <div class="section-title">💡 How to Improve</div>
+            <ul>
+                {% for tip in tips %}
+                <li>{{ tip }}</li>
+                {% endfor %}
+                <li>Use the <strong>STAR method</strong>: Situation → Task → Action → Result</li>
+                <li>Aim for <strong>3–5 sentences</strong> with specific real examples</li>
+                <li>Always end with a <strong>measurable outcome</strong></li>
             </ul>
         </div>
         {% endif %}
 
-        <!-- ═══ ACTIONS ═══ -->
+        <!-- ACTIONS -->
         <div class="result-actions">
             <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg">← Dashboard</a>
-            <a href="{{ url_for('answer_history', result_id=result_id) }}" class="btn btn-ghost btn-lg">📖 Review</a>
+            <a href="{{ url_for('answer_history', result_id=result_id) }}" class="btn btn-ghost btn-lg">📖 Full Review</a>
             <a href="{{ url_for('mode', category=category) }}" class="btn btn-primary btn-lg">🔁 Try Again</a>
         </div>
 
@@ -109,56 +104,49 @@
 <script>
 // ── ANIMATED SCORE COUNTER ──
 const finalScore = {{ score }};
+const finalPct   = {{ percentage }};
 const display    = document.getElementById('scoreDisplay');
+const ringFill   = document.getElementById('ringFill');
+const ringText   = document.getElementById('ringText');
+const circumference = 326.7;
 let current = 0;
-const steps = 40;
+const steps = 50;
 
 const counter = setInterval(() => {
     current = Math.min(current + finalScore / steps, finalScore);
     display.textContent = Math.round(current);
+    const pctNow = (current / finalScore) * finalPct;
+    const offset = circumference - (pctNow / 100) * circumference;
+    ringFill.style.strokeDashoffset = offset;
+    ringText.textContent = Math.round(pctNow) + '%';
     if (current >= finalScore) clearInterval(counter);
-}, 800 / steps);
+}, 900 / steps);
 
-// ── CONFETTI (only on perfect score) ──
 {% if percentage == 100 %}
 (function launchConfetti() {
     const canvas = document.getElementById('confetti-canvas');
-    const ctx    = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height= window.innerHeight;
-
-    const pieces = Array.from({length:150}, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 4,
-        d: Math.random() * 150,
-        color: ['#6C63FF','#00D4AA','#FFB800','#FF6B6B','#0EA5E9'][Math.floor(Math.random()*5)],
-        tilt: Math.floor(Math.random()*10) - 10,
-        tiltAngle: 0,
-        tiltAngleInc: Math.random() * 0.07 + 0.05,
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const pieces = Array.from({length:160}, () => ({
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4, d: Math.random() * 150, tilt: Math.floor(Math.random()*10)-10,
+        tiltAngle: 0, tiltAngleInc: Math.random() * 0.07 + 0.05,
+        color: ['#6C63FF','#00D4AA','#FFB800','#FF6B6B','#0EA5E9'][Math.floor(Math.random()*5)]
     }));
-
     let angle = 0, frame;
-
     function draw() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        angle += 0.01;
+        ctx.clearRect(0,0,canvas.width,canvas.height); angle += 0.01;
         pieces.forEach(p => {
-            p.tiltAngle += p.tiltAngleInc;
-            p.y += (Math.cos(angle + p.d) + 1 + p.r / 2) * 1.2;
-            p.tilt = Math.sin(p.tiltAngle) * 15;
-            ctx.beginPath();
-            ctx.lineWidth = p.r / 2;
-            ctx.strokeStyle = p.color;
-            ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
-            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
-            ctx.stroke();
-            if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+            p.tiltAngle += p.tiltAngleInc; p.y += (Math.cos(angle+p.d)+1+p.r/2)*1.2;
+            p.tilt = Math.sin(p.tiltAngle)*15;
+            ctx.beginPath(); ctx.lineWidth=p.r/2; ctx.strokeStyle=p.color;
+            ctx.moveTo(p.x+p.tilt+p.r/4, p.y); ctx.lineTo(p.x+p.tilt, p.y+p.tilt+p.r/4); ctx.stroke();
+            if (p.y > canvas.height) { p.y=-20; p.x=Math.random()*canvas.width; }
         });
         frame = requestAnimationFrame(draw);
     }
     draw();
-    setTimeout(() => { cancelAnimationFrame(frame); ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);
+    setTimeout(() => { cancelAnimationFrame(frame); ctx.clearRect(0,0,canvas.width,canvas.height); }, 5000);
 })();
 {% endif %}
 </script>
