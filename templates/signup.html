@@ -7,14 +7,14 @@
 
         <div class="auth-icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M19 8v6m3-3h-6"></path>
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M19 8v6m3-3h-6"/>
             </svg>
         </div>
 
         <h1 class="auth-title">Create your account</h1>
-        <p class="auth-sub">Start your AI-powered interview journey today</p>
+        <p class="auth-sub">Start your AI-powered interview journey today — it's free</p>
 
         <form method="POST" action="{{ url_for('signup') }}" autocomplete="on" id="signupForm">
 
@@ -22,36 +22,19 @@
                 <label class="field-label" for="username">Username</label>
                 <div class="input-wrap has-icon">
                     <span class="input-icon">@</span>
-                    <input
-                        class="field-input"
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="e.g. suhas_dev"
-                        required
-                        autocomplete="username"
-                        pattern="[a-z0-9_]+"
-                        minlength="3"
-                        maxlength="30"
-                        autofocus
-                    >
+                    <input class="field-input" type="text" id="username" name="username"
+                           placeholder="e.g. suhas_dev" required autocomplete="username"
+                           pattern="[a-z0-9_]+" minlength="3" maxlength="30" autofocus>
                 </div>
-                <span class="field-hint">3–30 characters · lowercase letters, numbers, underscores only</span>
+                <span class="field-hint">3–30 chars · lowercase letters, numbers, underscores only</span>
             </div>
 
             <div class="field">
                 <label class="field-label" for="email">Email Address</label>
                 <div class="input-wrap has-icon">
                     <span class="input-icon">✉</span>
-                    <input
-                        class="field-input"
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="you@example.com"
-                        required
-                        autocomplete="email"
-                    >
+                    <input class="field-input" type="email" id="email" name="email"
+                           placeholder="you@example.com" required autocomplete="email">
                 </div>
             </div>
 
@@ -59,47 +42,29 @@
                 <label class="field-label" for="password">Password</label>
                 <div class="input-wrap has-icon">
                     <span class="input-icon">🔒</span>
-                    <input
-                        class="field-input"
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Min 8 chars, 1 uppercase, 1 number"
-                        required
-                        minlength="8"
-                        autocomplete="new-password"
-                    >
-                    <button type="button" class="eye-toggle" onclick="togglePwd('password', this)" aria-label="Show password">👁</button>
+                    <input class="field-input" type="password" id="password" name="password"
+                           placeholder="Min 8 chars, 1 uppercase, 1 number"
+                           required minlength="8" autocomplete="new-password">
+                    <button type="button" class="eye-toggle" onclick="togglePwd('password',this)" aria-label="Show password">👁</button>
                 </div>
-                <div class="pwd-strength" id="pwdStrength"></div>
+                <div id="pwdStrength"></div>
             </div>
 
             <div class="field">
                 <label class="field-label" for="confirm_password">Confirm Password</label>
                 <div class="input-wrap has-icon">
                     <span class="input-icon">🔒</span>
-                    <input
-                        class="field-input"
-                        type="password"
-                        id="confirm_password"
-                        name="confirm_password"
-                        placeholder="Re-enter your password"
-                        required
-                        autocomplete="new-password"
-                    >
-                    <button type="button" class="eye-toggle" onclick="togglePwd('confirm_password', this)" aria-label="Show password">👁</button>
+                    <input class="field-input" type="password" id="confirm_password" name="confirm_password"
+                           placeholder="Re-enter your password" required autocomplete="new-password">
+                    <button type="button" class="eye-toggle" onclick="togglePwd('confirm_password',this)" aria-label="Show password">👁</button>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg btn-full mt-24">
-                Create Account →
-            </button>
-
+            <button type="submit" class="btn btn-primary btn-lg btn-full mt-24">Create Account →</button>
         </form>
 
         <div class="auth-footer mt-16">
-            Already have an account?
-            <a href="{{ url_for('login') }}">Sign in here</a>
+            Already have an account? <a href="{{ url_for('login') }}">Sign in here</a>
         </div>
 
     </div>
@@ -110,21 +75,14 @@
 <script>
 function togglePwd(id, btn) {
     const input = document.getElementById(id);
-    if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = '🙈';
-    } else {
-        input.type = 'password';
-        btn.textContent = '👁';
-    }
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.textContent = input.type === 'password' ? '👁' : '🙈';
 }
 
-// Password strength indicator
 const pwdInput = document.getElementById('password');
 const strengthEl = document.getElementById('pwdStrength');
-
-const colors = ['', '#EF4444', '#F59E0B', '#22C55E', '#6C63FF'];
-const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+const colors = ['','#EF4444','#F59E0B','#22C55E','#6C63FF'];
+const labels = ['','Weak','Fair','Good','Strong'];
 
 pwdInput.addEventListener('input', () => {
     const val = pwdInput.value;
@@ -133,27 +91,18 @@ pwdInput.addEventListener('input', () => {
     if (/[A-Z]/.test(val)) score++;
     if (/[0-9]/.test(val)) score++;
     if (/[^A-Za-z0-9]/.test(val)) score++;
-
-    if (val.length === 0) {
-        strengthEl.innerHTML = '';
-        return;
-    }
-
+    if (!val) { strengthEl.innerHTML = ''; return; }
     strengthEl.innerHTML = `
         <div style="display:flex;gap:4px;margin-top:6px;">
             ${[1,2,3,4].map(i => `<div style="flex:1;height:3px;border-radius:4px;background:${i<=score?colors[score]:'var(--border)'}"></div>`).join('')}
         </div>
-        <span style="font-size:0.75rem;color:${colors[score]};font-weight:600;">${labels[score]}</span>
-    `;
+        <span style="font-size:0.75rem;color:${colors[score]};font-weight:600;">${labels[score]}</span>`;
 });
 
-// Client-side confirm password check
 document.getElementById('signupForm').addEventListener('submit', function(e) {
-    const pwd = document.getElementById('password').value;
-    const confirm = document.getElementById('confirm_password').value;
-    if (pwd !== confirm) {
+    if (document.getElementById('password').value !== document.getElementById('confirm_password').value) {
         e.preventDefault();
-        alert('Passwords do not match. Please check and try again.');
+        alert('Passwords do not match.');
     }
 });
 </script>
