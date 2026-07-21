@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ElevateAI — AI-Powered Interview Preparation</title>
+  <style>
+    body{font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;max-width:900px;margin:3rem auto;padding:1rem;color:#0f172a;background:#ffffff}
+    header{border-bottom:1px solid #e6e9ee;padding-bottom:1rem;margin-bottom:1rem}
+    h1{font-size:1.6rem;margin:0}
+    p{line-height:1.6}
+    pre{background:#f6f8fa;padding:1rem;border-radius:6px;overflow:auto}
+    a{color:#0366d6}
+    footer{margin-top:2rem;border-top:1px solid #e6e9ee;padding-top:1rem;color:#6b7280;font-size:0.9rem}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ElevateAI</h1>
+    <p>AI-Powered Interview Preparation Platform — Flask application</p>
+  </header>
+
+  <section>
+    <h2>What this repo contains</h2>
+    <p>This repository is a Flask web application (server-side Python). It includes <code>app.py</code>, a <code>templates/</code> folder and a <code>static/</code> folder. GitHub Pages only serves static sites — it cannot run a Python server.</p>
+  </section>
+
+  <section>
+    <h2>Run locally</h2>
+    <p>To run the app locally:</p>
+    <pre>python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python app.py</pre>
+    <p>Then open <a href="http://127.0.0.1:5000">http://127.0.0.1:5000</a> in your browser.</p>
+  </section>
+
+  <section>
+    <h2>Host it online</h2>
+    <p>Since this is a Flask app, choose a platform that runs Python servers (examples):</p>
+    <ul>
+      <li>Render — easy GitHub + free tier</li>
+      <li>Heroku — add a <code>Procfile</code> (e.g. <code>web: gunicorn app:app</code>) and push</li>
+      <li>Railway, Fly, DigitalOcean App Platform, or an EC2 droplet</li>
+    </ul>
+    <p>If you'd rather keep a static GitHub Pages landing page, this file (in <code>docs/</code>) will be served as a Pages site. The URL will be:</p>
+    <p><strong>https://suhas-h-n.github.io/ElevateAI/</strong></p>
+  </section>
+
+  <section>
+    <h2>Quick links</h2>
+    <ul>
+      <li><a href="https://github.com/Suhas-H-N/ElevateAI">Repository on GitHub</a></li>
+      <li><a href="https://github.com/Suhas-H-N/ElevateAI/blob/main/README.md">README</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    This page was added automatically to enable a GitHub Pages landing for the project. If you want a full static export or deployment help, I can prepare that next.
+  </footer>
+</body>
+</html>
